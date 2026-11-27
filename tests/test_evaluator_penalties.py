@@ -55,6 +55,8 @@ class TestEvaluatorPenalties(unittest.TestCase):
         self.assertGreaterEqual(self.clean["overall_score"], 4.5)
 
     def test_dismissed_question_is_a_hard_failure_and_lowers_score(self) -> None:
+        prefixed = self.evaluator.evaluate_session(self._with_response(3, "In practice, got it."))
+        self.assertIn("dismissed_question", {f["code"] for f in prefixed["findings"]})
         report = self.evaluator.evaluate_session(self._with_response(3, "Got it."))
         self.assertTrue(any("acknowledgment" in h for h in report["hard_failures"]))
         self.assertIn("dismissed_question", {f["code"] for f in report["findings"]})

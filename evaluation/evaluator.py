@@ -19,7 +19,7 @@ from human_interview_engine.schema_validator import assert_valid_schema  # noqa:
 from human_interview_engine.transcription_intelligence import TranscriptionIntelligence  # noqa: E402
 
 _ACK_ONLY_RE = re.compile(
-    r"^(?:got it|okay|ok|sure|sounds good|understood|makes sense|thanks|thank you)[\s,.!—-]*"
+    r"^(?:[a-z' ]{1,40},\s*)?(?:got it|okay|ok|sure|sounds good|understood|makes sense|thanks|thank you)[\s,.!—-]*"
     r"(?:thanks for having me|thank you)?[.!\s]*$",
     re.IGNORECASE,
 )
