@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Candidate Profile",
+  "description": "Comprehensive candidate profile extracted from resume and enriched with inferred intelligence",
+  "type": "object",
+  "required": ["version", "identity", "career", "competencies", "persona", "evidence_status"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "4.0.0"
+    },
+    "identity": {
+      "type": "object",
+      "required": ["name", "current_title", "years_experience", "seniority_level", "location"],
+      "properties": {
+        "name": { "type": "string" },
+        "current_title": { "type": "string" },
+        "years_experience": { "type": "number", "minimum": 0 },
+        "seniority_level": {
+          "type": "string",
+          "enum": ["junior", "mid", "senior", "staff", "principal", "manager", "director", "vp", "c-level"]
+        },
+        "location": { "type": "string" },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "email": { "type": "string", "format": "email" },
+            "phone": { "type": "string" },
+            "linkedin": { "type": "string", "format": "uri" },
+            "github": { "type": "string", "format": "uri" },
+            "portfolio": { "type": "string", "format": "uri" }
+          }
+        }
+      }
+    },
+    "career": {
+      "type": "object",
+      "required": ["chronology", "total_years", "progression"],
+      "properties": {
+        "chronology": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["employer", "title", "start_date", "end_date", "industry", "role_type"],
+            "properties": {
+              "employer": { "type": "string" },
+              "title": { "type": "string" },
+              "start_date": { "type": "string", "format": "date" },
+              "end_date": { "type": "string", "format": "date" },
+              "duration_months": { "type": "number" },
+              "industry": { "type": "string" },
+              "role_type": {
+                "type": "string",
+                "enum": ["engineering", "architecture", "management", "support", "consulting", "sales-engineering", "product", "operations", "research"]
+              },
+              "team_size": { "type": "number" },
+              "scope": { "type": "string" },
+              "key_technologies": { "type": "array", "items": { "type": "string" } },
+              "key_accomplishments": { "type": "array", "items": { "type": "string" } },
+              "evidence_status": { "type": "string", "enum": ["documented", "confirmed", "inferred"] }
+            }
+          }
+        },
+        "total_years": { "type": "number" },
+        "progression": {
+          "type": "object",
+          "properties": {
+            "trajectory": { "type": "string", "enum": ["steady", "accelerated", "lateral", "mixed"] },
+            "promotions": { "type": "array", "items": { "type": "string" } },
+            "scope_expansion": { "type": "string" }
+          }
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "period": { "type": "string" },
+              "reason": { "type": "string" },
+              "evidence_status": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "competencies": {
+      "type": "object",
+      "required": ["technical", "business", "leadership", "transferable"],
+      "properties": {
+        "technical": {
+          "type": "object",
+          "properties": {
+            "core": { "type": "array", "items": { "type": "string" } },
+            "proficient": { "type": "array", "items": { "type": "string" } },
+            "familiar": { "type": "array", "items": { "type": "string" } },
+            "domains": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "business": {
+          "type": "object",
+          "properties": {
+            "domains": { "type": "array", "items": { "type": "string" } },
+            "customer_facing": { "type": "boolean" },
+            "p_l_responsibility": { "type": "boolean" },
+            "strategic_planning": { "type": "boolean" },
+            "vendor_management": { "type": "boolean" }
+          }
+        },
+        "leadership": {
+          "type": "object",
+          "properties": {
+            "people_management": { "type": "boolean" },
+            "team_size_managed": { "type": "number" },
+            "technical_leadership": { "type": "boolean" },
+            "project_leadership": { "type": "boolean" },
+            "mentoring": { "type": "boolean" },
+            "hiring": { "type": "boolean" }
+          }
+        },
+        "transferable": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "persona": {
+      "type": "object",
+      "required": ["communication_style", "technical_confidence", "professional_maturity", "problem_solving_approach"],
+      "properties": {
+        "communication_style": {
+          "type": "string",
+          "enum": ["direct", "collaborative", "analytical", "narrative", "executive", "technical-deep"]
+        },
+        "technical_confidence": {
+          "type": "string",
+          "enum": ["developing", "solid", "high", "expert"]
+        },
+        "professional_maturity": {
+          "type": "string",
+          "enum": ["early-career", "established", "seasoned", "veteran"]
+        },
+        "problem_solving_approach": {
+          "type": "string",
+          "enum": ["systematic", "pragmatic", "innovative", "risk-aware", "customer-first"]
+        },
+        "decision_making": {
+          "type": "string",
+          "enum": ["data-driven", "experience-guided", "consensus-seeking", "decisive", "deliberate"]
+        },
+        "ownership_level": {
+          "type": "string",
+          "enum": ["task", "feature", "system", "platform", "organization"]
+        },
+        "business_awareness": {
+          "type": "string",
+          "enum": ["task-focused", "team-aware", "org-aware", "strategic"]
+        },
+        "humility_level": {
+          "type": "string",
+          "enum": ["appropriate", "high", "low"]
+        },
+        "preferred_detail_level": {
+          "type": "string",
+          "enum": ["high-level", "balanced", "deep-technical"]
+        }
+      }
+    },
+    "evidence_status": {
+      "type": "object",
+      "properties": {
+        "resume_version": { "type": "string" },
+        "last_updated": { "type": "string", "format": "date-time" },
+        "confirmed_sections": { "type": "array", "items": { "type": "string" } },
+        "inferred_sections": { "type": "array", "items": { "type": "string" } },
+        "gaps_identified": { "type": "array", "items": { "type": "string" } },
+        "candidate_notes": { "type": "string" }
+      }
+    }
+  }
+}

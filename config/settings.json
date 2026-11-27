@@ -1,0 +1,315 @@
+{
+  "version": "4.0.0",
+  "system": {
+    "name": "HumanInterview Engine",
+    "mode": "immersive",
+    "strict_evidence_mode": false,
+    "simulation_context_required": true
+  },
+  "communication": {
+    "style": "natural",
+    "use_contractions": true,
+    "verbosity": "adaptive",
+    "personality_source": "inferred_from_resume",
+    "seniority_adaptation": true,
+    "audience_adaptation": true,
+    "avoid_patterns": [
+      "that's a great question",
+      "absolutely",
+      "in my previous role",
+      "that's how i approach",
+      "robotic_structure",
+      "excessive_corporate_language",
+      "textbook_explanations",
+      "forced_three_part_answers",
+      "unnecessary_summaries",
+      "repeated_leadership_cliches"
+    ],
+    "answer_duration_guidelines": {
+      "acknowledgment": "2-5s",
+      "simple_confirmation": "5-15s",
+      "numerical_clarification": "5-20s",
+      "narrow_technical_followup": "10-30s",
+      "recruiter_question": "30-60s",
+      "technical_concept": "30-60s",
+      "implementation_question": "45-90s",
+      "troubleshooting_scenario": "60-120s",
+      "behavioral_question": "75-120s",
+      "complex_hypothetical": "90-120s",
+      "system_design_initial": "2-3min",
+      "executive_followup": "30-45s"
+    }
+  },
+  "numerical": {
+    "precision": "appropriate",
+    "units": "metric",
+    "false_precision_prevention": true,
+    "ledger_validation": true,
+    "derived_calculation": true,
+    "unit_consistency": true,
+    "precision_rules": {
+      "counts": "exact",
+      "measurements": "significant_figures",
+      "percentages": "one_decimal",
+      "currency": "two_decimals",
+      "time": "appropriate_granularity",
+      "throughput": "appropriate_granularity"
+    },
+    "consistency_checks": [
+      "node_gpu_multiplication",
+      "gpu_hour_calculation",
+      "baseline_final_relationship",
+      "percentage_change_derivation",
+      "availability_downtime_alignment",
+      "team_size_ownership_alignment"
+    ]
+  },
+  "evidence": {
+    "classification_levels": [
+      "documented",
+      "confirmed",
+      "verified_numerical",
+      "calculated_numerical",
+      "technical_knowledge",
+      "transferable",
+      "contextual_inference",
+      "unconfirmed_detail",
+      "illustrative_estimate",
+      "simulated"
+    ],
+    "strict_mode": false,
+    "simulation_labeling": "internal_only",
+    "promotion_rules": {
+      "requires_explicit_confirmation": true,
+      "never_auto_promote": true
+    }
+  },
+  "session": {
+    "memory_retention": "full",
+    "context_compression": true,
+    "compression_preserves": [
+      "candidate_identity",
+      "important_technical_details",
+      "established_numerical_values",
+      "previous_decisions",
+      "interviewer_provided_information",
+      "evidence_status"
+    ],
+    "max_history_tokens": 50000,
+    "auto_save": true,
+    "recovery_enabled": true
+  },
+  "interviewer": {
+    "types": [
+      "recruiter",
+      "hiring_manager",
+      "technical_specialist",
+      "senior_engineer",
+      "architect",
+      "executive",
+      "customer_stakeholder",
+      "behavioral_interviewer",
+      "system_design_interviewer",
+      "skeptical_interviewer",
+      "collaborative_interviewer",
+      "panel_member"
+    ],
+    "intent_categories": [
+      "new_question",
+      "clarification",
+      "depth_test",
+      "ownership_test",
+      "numerical_test",
+      "business_judgment_test",
+      "leadership_test",
+      "communication_test",
+      "challenge",
+      "correction",
+      "info_providing",
+      "rhetorical",
+      "interrupt",
+      "repeat",
+      "topic_change",
+      "ending"
+    ],
+    "adaptation": {
+      "recruiter": { "depth": "low", "jargon": "minimal", "focus": "qualifications" },
+      "technical_specialist": { "depth": "high", "jargon": "full", "focus": "implementation" },
+      "architect": { "depth": "high", "jargon": "full", "focus": "tradeoffs_operations" },
+      "executive": { "depth": "medium", "jargon": "business", "focus": "outcomes_strategy" },
+      "hiring_manager": { "depth": "medium", "jargon": "mixed", "focus": "ownership_decisions" }
+    }
+  },
+  "experience_enrichment": {
+    "scenario_detail_level": "comprehensive",
+    "technology_timeline_validation": true,
+    "seniority_responsibility_alignment": true,
+    "coherence_requirement": "cross_followup_consistency",
+    "max_followup_depth": 20,
+    "components": [
+      "employer_context",
+      "employment_period",
+      "business_objective",
+      "project_scope",
+      "technical_environment",
+      "architecture",
+      "technology_stack",
+      "dependencies",
+      "infrastructure_scale",
+      "team_structure",
+      "candidate_responsibilities",
+      "individual_contributions",
+      "implementation_decisions",
+      "alternatives_considered",
+      "constraints",
+      "challenges",
+      "testing_methodology",
+      "operational_considerations",
+      "metrics",
+      "outcomes",
+      "lessons_learned"
+    ]
+  },
+  "reasoning": {
+    "cognitive_engine": "human_professional",
+    "internal_validation_steps": [
+      "interviewer_intent",
+      "candidate_knowledge",
+      "relevant_experience",
+      "numerical_requirements",
+      "communication_strategy",
+      "followup_resilience",
+      "evidence_classification"
+    ],
+    "troubleshooting_methodology": [
+      "establish_symptoms",
+      "understand_business_impact",
+      "determine_scope",
+      "identify_recent_changes",
+      "gather_evidence",
+      "form_hypotheses",
+      "prioritize_causes",
+      "isolate_components",
+      "validate_assumptions",
+      "identify_root_cause",
+      "implement_mitigation",
+      "confirm_recovery",
+      "prevent_recurrence"
+    ],
+    "system_design_methodology": [
+      "understand_requirements",
+      "identify_constraints",
+      "establish_scale",
+      "determine_availability",
+      "consider_security",
+      "identify_dependencies",
+      "evaluate_alternatives",
+      "explain_interactions",
+      "discuss_tradeoffs",
+      "consider_operations",
+      "evaluate_costs",
+      "address_failures",
+      "define_validation"
+    ]
+  },
+  "platform_adapters": {
+    "claude_code": {
+      "skill_install_path": "~/.claude/skills/human-interview-engine",
+      "memory_path": "~/.claude/skills/human-interview-engine/memory",
+      "supports_persistent_memory": true,
+      "supports_file_access": true
+    },
+    "claude_web": {
+      "uses_custom_instructions": true,
+      "supports_project_instructions": true,
+      "supports_file_upload": true,
+      "memory": "session_only"
+    },
+    "chatgpt": {
+      "uses_custom_instructions": true,
+      "supports_custom_gpts": true,
+      "supports_knowledge_files": true,
+      "memory": "session_only"
+    },
+    "custom": {
+      "uses_system_prompt": true,
+      "memory": "implementation_dependent"
+    }
+  },
+  "historical_learning": {
+    "import_formats": [
+      "json_transcript",
+      "chatgpt_export",
+      "claude_export",
+      "previous_preparation_prompts",
+      "user_corrections",
+      "post_interview_evaluations",
+      "candidate_feedback",
+      "interviewer_feedback"
+    ],
+    "weakness_categories": [
+      "robotic_communication",
+      "excessive_answer_length",
+      "insufficient_answer_depth",
+      "missing_numerical_information",
+      "weak_numerical_reasoning",
+      "unsupported_metrics",
+      "inadequate_technical_implementation",
+      "generic_textbook_explanations",
+      "weak_individual_ownership",
+      "repeated_professional_stories",
+      "employer_misalignment",
+      "technology_timeline_errors",
+      "candidate_identity_contamination",
+      "unnecessary_clarifying_questions",
+      "failure_to_wait_for_clarification",
+      "misunderstood_interviewer_intent",
+      "speech_transcription_errors",
+      "followup_contradictions",
+      "incorrect_technical_assumptions",
+      "excessive_agreement",
+      "weak_pressure_handling",
+      "missing_business_impact",
+      "unnatural_conclusions",
+      "breaking_character_referencing_resume"
+    ],
+    "regression_testing": true,
+    "preference_profile": true
+  },
+  "evaluation": {
+    "dimensions": [
+      "human_naturalness",
+      "conversational_authenticity",
+      "question_relevance",
+      "information_density",
+      "technical_accuracy",
+      "implementation_depth",
+      "numerical_accuracy",
+      "mathematical_consistency",
+      "professional_credibility",
+      "employer_alignment",
+      "seniority_alignment",
+      "individual_ownership",
+      "business_judgment",
+      "leadership_maturity",
+      "context_awareness",
+      "interviewer_adaptation",
+      "followup_consistency",
+      "appropriate_answer_length",
+      "evidence_integrity",
+      "technical_defensibility",
+      "response_latency"
+    ],
+    "rubric": "transparent",
+    "independent_evaluation": true,
+    "blind_human_evaluation": "where_practical"
+  },
+  "privacy": {
+    "local_first": true,
+    "no_unauthorized_transmission": true,
+    "no_secret_recording": true,
+    "candidate_isolation": true,
+    "deletion_controls": true,
+    "authorized_voice_only": true
+  }
+}

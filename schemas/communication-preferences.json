@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Communication Preferences",
+  "description": "Candidate communication preferences and style profile for natural response generation",
+  "type": "object",
+  "required": ["version", "style_profile", "patterns", "adaptation_rules"],
+  "properties": {
+    "version": { "type": "string", "const": "4.0.0" },
+    "style_profile": {
+      "type": "object",
+      "properties": {
+        "formality": { "type": "string", "enum": ["casual", "professional", "formal", "adaptive"] },
+        "verbosity": { "type": "string", "enum": ["concise", "balanced", "detailed", "adaptive"] },
+        "technical_depth": { "type": "string", "enum": ["high-level", "implementation", "architecture", "adaptive"] },
+        "first_person": { "type": "boolean" },
+        "contractions": { "type": "boolean" },
+        "storytelling": { "type": "string", "enum": ["minimal", "moderate", "rich", "adaptive"] },
+        "humility": { "type": "string", "enum": ["appropriate", "high", "confident"] },
+        "directness": { "type": "string", "enum": ["direct", "diplomatic", "contextual"] }
+      }
+    },
+    "patterns": {
+      "type": "object",
+      "properties": {
+        "preferred_openings": { "type": "array", "items": { "type": "string" } },
+        "preferred_transitions": { "type": "array", "items": { "type": "string" } },
+        "preferred_closings": { "type": "array", "items": { "type": "string" } },
+        "avoid_phrases": { "type": "array", "items": { "type": "string" } },
+        "signature_phrases": { "type": "array", "items": { "type": "string" } },
+        "sentence_structure_variance": { "type": "string", "enum": ["low", "medium", "high"] }
+      }
+    },
+    "adaptation_rules": {
+      "type": "object",
+      "properties": {
+        "recruiter": {
+          "type": "object",
+          "properties": {
+            "verbosity": { "type": "string" },
+            "technical_depth": { "type": "string" },
+            "focus": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "technical_specialist": {
+          "type": "object",
+          "properties": {
+            "verbosity": { "type": "string" },
+            "technical_depth": { "type": "string" },
+            "focus": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "architect": {
+          "type": "object",
+          "properties": {
+            "verbosity": { "type": "string" },
+            "technical_depth": { "type": "string" },
+            "focus": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "executive": {
+          "type": "object",
+          "properties": {
+            "verbosity": { "type": "string" },
+            "technical_depth": { "type": "string" },
+            "focus": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "hiring_manager": {
+          "type": "object",
+          "properties": {
+            "verbosity": { "type": "string" },
+            "technical_depth": { "type": "string" },
+            "focus": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "learned_from_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "observation": { "type": "string" },
+          "applied_rule": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    }
+  }
+}

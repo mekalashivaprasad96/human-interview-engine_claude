@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Evidence Classification",
+  "description": "Evidence classification system for tracking provenance of all claims and information",
+  "type": "object",
+  "required": ["version", "classifications", "rules"],
+  "properties": {
+    "version": { "type": "string", "const": "4.0.0" },
+    "classifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["level", "description", "criteria", "examples", "spoken_output_policy"],
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": [
+              "documented",
+              "confirmed",
+              "verified_numerical",
+              "calculated_numerical",
+              "technical_knowledge",
+              "transferable",
+              "contextual_inference",
+              "unconfirmed_detail",
+              "illustrative_estimate",
+              "simulated"
+            ]
+          },
+          "description": { "type": "string" },
+          "criteria": { "type": "string" },
+          "examples": { "type": "array", "items": { "type": "string" } },
+          "spoken_output_policy": {
+            "type": "string",
+            "enum": ["present_as_fact", "present_with_qualification", "present_as_example", "internal_only"]
+          },
+          "promotion_path": { "type": "array", "items": { "type": "string" } },
+          "demotion_triggers": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "properties": {
+        "never_auto_promote": { "type": "boolean" },
+        "requires_explicit_confirmation_for": { "type": "array", "items": { "type": "string" } },
+        "simulated_never_promoted_in_authentic_mode": { "type": "boolean" },
+        "inferred_requires_candidate_acknowledgment": { "type": "boolean" },
+        "numerical_estimates_must_be_labeled": { "type": "boolean" },
+        "internal_tracking_only": { "type": "boolean" }
+      }
+    },
+    "mode_policies": {
+      "type": "object",
+      "properties": {
+        "immersive": {
+          "type": "object",
+          "properties": {
+            "allowed_levels": { "type": "array", "items": { "type": "string" } },
+            "simulated_treated_as": { "type": "string" }
+          }
+        },
+        "authentic": {
+          "type": "object",
+          "properties": {
+            "allowed_levels": { "type": "array", "items": { "type": "string" } },
+            "simulated_treated_as": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
