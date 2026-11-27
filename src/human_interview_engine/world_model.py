@@ -52,31 +52,32 @@ class ProfessionalWorldModelBuilder:
         total_months = sum(job.get("duration_months") or 12 for job in chronology)
         total_years = round(total_months / 12.0, 1) if chronology else 1.0
 
-        latest_title = (chronology[0].get("role_title", "") if chronology else "").lower()
+        latest_role_title = (chronology[0].get("role_title") or "") if chronology else ""
+        latest_title = latest_role_title.lower()
         all_titles = " ".join(j.get("role_title", "") for j in chronology).lower()
         all_bullets = " ".join(" ".join(j.get("highlights", [])) for j in chronology).lower()
 
         if any(k in latest_title for k in ("vp", "vice president", "chief ", "cto", "cio", "svp", "evp")):
             level = "executive"
-            rationale = f"Latest title '{chronology[0].get('role_title')}' reflects executive scope across ~{total_years} years."
+            rationale = f"Latest title '{latest_role_title}' reflects executive scope across ~{total_years} years."
         elif "director" in latest_title or "head of" in latest_title:
             level = "director"
-            rationale = f"Latest title '{chronology[0].get('role_title')}' reflects multi-team director scope across ~{total_years} years."
+            rationale = f"Latest title '{latest_role_title}' reflects multi-team director scope across ~{total_years} years."
         elif "engineering manager" in latest_title or ("manager" in latest_title and "account" not in latest_title):
             level = "manager"
-            rationale = f"Latest title '{chronology[0].get('role_title')}' indicates people and delivery management."
+            rationale = f"Latest title '{latest_role_title}' indicates people and delivery management."
         elif "principal" in latest_title:
             level = "principal"
-            rationale = f"Latest title '{chronology[0].get('role_title')}' reflects principal-level technical scope."
+            rationale = f"Latest title '{latest_role_title}' reflects principal-level technical scope."
         elif "staff" in latest_title:
             level = "staff"
-            rationale = f"Latest title '{chronology[0].get('role_title')}' reflects staff-level cross-team architecture scope."
+            rationale = f"Latest title '{latest_role_title}' reflects staff-level cross-team architecture scope."
         elif any(k in latest_title for k in ("senior", "sr.", "sr ", "lead")) or total_years >= 5.5:
             level = "senior"
-            rationale = f"Role progression ({chronology[0].get('role_title', 'Engineer')}) and ~{total_years} years support senior scope."
+            rationale = f"Role progression ({latest_role_title or 'Engineer'}) and ~{total_years} years support senior scope."
         elif any(k in latest_title for k in ("junior", "jr", "associate", "intern", "entry")) or (total_years < 2.2 and "senior" not in all_titles):
             level = "junior"
-            rationale = f"Early-career history (~{total_years} years, {chronology[0].get('role_title', 'entry role')}) aligns with junior scope; avoids exaggerating seniority."
+            rationale = f"Early-career history (~{total_years} years, {latest_role_title or 'no documented role title'}) aligns with junior scope; avoids exaggerating seniority."
         else:
             # Check ownership verbs carefully for mid vs senior
             if total_years >= 4.0 and any(v in all_bullets for v in ("architected", "led ", "owned ")):

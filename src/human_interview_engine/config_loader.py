@@ -15,6 +15,28 @@ def find_package_root(start: Path | None = None) -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+# Short names used in SKILL.md, README.md and the prompt adapters, mapped to canonical mode IDs.
+MODE_ALIASES: dict[str, str] = {
+    "immersive": "immersive_simulation",
+    "simulation": "immersive_simulation",
+    "authentic": "authentic_preparation",
+    "preparation": "authentic_preparation",
+    "technical": "technical_deep_dive",
+    "deep_dive": "technical_deep_dive",
+    "recruiter": "recruiter_screening",
+    "screening": "recruiter_screening",
+    "manager": "hiring_manager",
+    "behavioural": "behavioral",
+    "design": "system_design",
+    "exec": "executive",
+    "cognitive": "general_cognitive_ability",
+    "gca": "general_cognitive_ability",
+    "presentation": "presentation_followup",
+    "coaching": "coaching_evaluation",
+    "evaluation": "coaching_evaluation",
+}
+
+
 class EngineConfig:
     """Loads and exposes static engine configuration registries."""
 
@@ -38,6 +60,18 @@ class EngineConfig:
         """Load a JSON schema by base filename or full filename."""
         filename = schema_name if schema_name.endswith(".json") else f"{schema_name}.schema.json"
         return self._load_json(self.schemas_dir / filename)
+
+    def resolve_mode(self, mode: str | None) -> str:
+        """Return the canonical operating mode ID for a name or alias; raise ValueError if unknown."""
+        if mode is None or not str(mode).strip():
+            return self.defaults.get("default_operating_mode", "immersive_simulation")
+        key = str(mode).strip().lower().replace("-", "_").replace(" ", "_")
+        key = MODE_ALIASES.get(key, key)
+        if key not in self.operating_modes:
+            valid = ", ".join(sorted(self.operating_modes))
+            aliases = ", ".join(sorted(MODE_ALIASES))
+            raise ValueError(f"Unknown operating mode {mode!r}. Valid modes: {valid}. Aliases: {aliases}.")
+        return key
 
     def get_mode_config(self, mode: str) -> dict[str, Any]:
         """Return operating mode configuration, falling back to default mode."""

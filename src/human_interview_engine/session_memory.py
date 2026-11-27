@@ -3,11 +3,23 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from pathlib import Path
 from typing import Any
 
 from .models import short_id, utc_now_iso
+
+_SAFE_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$")
+
+
+def validate_storage_id(value: str, kind: str = "id") -> str:
+    """Reject IDs that could escape the memory root (path separators, '..', empty, odd characters)."""
+    if not isinstance(value, str) or not _SAFE_ID_RE.match(value):
+        raise ValueError(
+            f"Invalid {kind} {value!r}: use only letters, digits, '-' and '_' (no path separators or '..')."
+        )
+    return value
 
 
 class SessionMemoryManager:
@@ -20,11 +32,20 @@ class SessionMemoryManager:
         self.candidates_dir.mkdir(parents=True, exist_ok=True)
         self.sessions_dir.mkdir(parents=True, exist_ok=True)
 
+    @staticmethod
+    def _contained_dir(base: Path, item_id: str, kind: str) -> Path:
+        validate_storage_id(item_id, kind)
+        target = (base / item_id).resolve()
+        base_resolved = base.resolve()
+        if target.parent != base_resolved:
+            raise ValueError(f"Invalid {kind} {item_id!r}: resolves outside {base_resolved}.")
+        return target
+
     def _candidate_dir(self, candidate_id: str) -> Path:
-        return self.candidates_dir / candidate_id
+        return self._contained_dir(self.candidates_dir, candidate_id, "candidate_id")
 
     def _session_dir(self, session_id: str) -> Path:
-        return self.sessions_dir / session_id
+        return self._contained_dir(self.sessions_dir, session_id, "session_id")
 
     @staticmethod
     def _write_json(path: Path, data: Any) -> None:

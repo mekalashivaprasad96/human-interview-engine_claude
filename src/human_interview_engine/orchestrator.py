@@ -79,6 +79,11 @@ class HumanInterviewEngine:
     ) -> dict[str, Any]:
         """Initialize candidate world model, JD analysis, scenario bank, ledgers, and wait for first question."""
         start_t = time.perf_counter()
+        operating_mode = self.config.resolve_mode(operating_mode)
+        if isinstance(resume, str) and not resume.strip():
+            raise ValueError("Resume is empty: pass a resume file path or the resume text.")
+        if not (job_description or "").strip():
+            raise ValueError("Job description is empty: pass a job description file path or text.")
 
         profile = self.candidate_engine.parse_resume(
             resume_input=resume,
@@ -231,9 +236,10 @@ class HumanInterviewEngine:
             initial_items=bundle["evidence_ledger"].get("items", []),
         )
 
-        operating_mode = mode_override or session["operating_mode"]
         if mode_override:
+            mode_override = self.config.resolve_mode(mode_override)
             session["operating_mode"] = mode_override
+        operating_mode = mode_override or session["operating_mode"]
 
         # Active project resolution (check if transcript names a specific employer)
         active_project = self._resolve_active_project(
@@ -597,7 +603,7 @@ class HumanInterviewEngine:
                 precision_targets=precision,
             )
 
-        if itype == "recruiter" or any(k in low for k in ("tell me about yourself", "walk me through your background", "why this role")):
+        if itype == "recruiter" or any(k in low for k in ("tell me about yourself", "introduce yourself", "walk me through your background", "why this role")):
             return self.business_reasoning.reason_recruiter(cleaned, profile, world_model, jd_analysis)
 
         if itype == "executive" or operating_mode == "executive" or (

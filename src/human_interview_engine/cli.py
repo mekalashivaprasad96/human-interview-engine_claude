@@ -10,10 +10,30 @@ from pathlib import Path
 from .orchestrator import HumanInterviewEngine
 
 
-def _read_text_or_arg(value: str) -> str:
-    p = Path(value)
-    if p.exists() and p.is_file():
+_PATH_LIKE_SUFFIXES = (".md", ".markdown", ".txt", ".json", ".pdf", ".doc", ".docx", ".rtf", ".html")
+
+
+def _looks_like_path(value: str) -> bool:
+    """Heuristic: a single-line value that ends in a document extension or starts like a filesystem path."""
+    v = value.strip()
+    if not v or "\n" in v or len(v) > 4096:
+        return False
+    if v.lower().endswith(_PATH_LIKE_SUFFIXES):
+        return True
+    return v.startswith(("/", "./", "../", "~/", "~"))
+
+
+def _read_text_or_arg(value: str, label: str) -> str:
+    """Read a file if the value is an existing path; treat other values as raw text.
+
+    A value that looks like a path but does not exist is an error, so a typo never
+    silently becomes the resume or job-description text.
+    """
+    p = Path(value).expanduser()
+    if p.is_file():
         return p.read_text(encoding="utf-8")
+    if _looks_like_path(value):
+        raise FileNotFoundError(f"{label} file not found: {value}")
     return value
 
 
@@ -57,12 +77,20 @@ def main(argv: list[str] | None = None) -> int:
     p_del_cand.add_argument("--candidate-id", required=True)
 
     args = parser.parse_args(argv)
+    try:
+        return _dispatch(args)
+    except (ValueError, FileNotFoundError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+
+def _dispatch(args: argparse.Namespace) -> int:
     engine = HumanInterviewEngine(memory_dir=args.memory_dir)
 
     if args.command == "init":
         res = engine.initialize_session(
-            resume=_read_text_or_arg(args.resume),
-            job_description=_read_text_or_arg(args.jd),
+            resume=_read_text_or_arg(args.resume, "Resume"),
+            job_description=_read_text_or_arg(args.jd, "Job description"),
             operating_mode=args.mode,
             company_name=args.company,
             interviewer_type=args.interviewer,
