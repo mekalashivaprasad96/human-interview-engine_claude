@@ -51,11 +51,13 @@ class NumericalEngine:
         target_metric: str | None = None
         if any(k in q for k in ("gpu-hour", "gpu hour", "gpu hours")):
             target_metric = "gpu_hours"
-        elif "per node" in q or "gpus per node" in q:
+        elif any(k in q for k in ("per node", "gpus per node", "how large", "node size", "instance size")) or re.search(
+            r"(?:do|does)\s+(?:those|that|each)\s+(?:gpu|node|server)s?.*\bcontains?\b", q
+        ):
             target_metric = "gpus_per_node"
-        elif "how many gpu" in q or "total gpu" in q or "gpus" in q:
+        elif "how many gpu" in q or "total gpu" in q or ("gpus" in q and "node" not in q):
             target_metric = "total_gpus"
-        elif "node" in q or "server" in q or "host" in q:
+        elif "node" in q or "server" in q or "host" in q or "cluster" in q:
             target_metric = "nodes"
         elif "team size" in q or "how many engineers" in q or "how big was the team" in q or "people on the team" in q:
             target_metric = "team_size"

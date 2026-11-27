@@ -42,6 +42,7 @@ class FollowUpAndPressureHandler:
         project_id: str | None,
         operating_mode: str,
         profile: dict[str, Any],
+        world_model: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Answer numerical questions directly using ledger values, derivations, and methodology."""
         analysis = self.numerical_engine.analyze_numerical_query(
@@ -53,6 +54,7 @@ class FollowUpAndPressureHandler:
         entry = analysis["entry"]
         dyn = analysis["dynamic_calculation"]
         discrepancy = analysis["challenge_discrepancy"]
+        low_q = (question or "").lower()
 
         # 1. Check for interviewer math discrepancy challenge first
         if discrepancy is not None:
@@ -72,23 +74,52 @@ class FollowUpAndPressureHandler:
 
         # 2. Authentic preparation protection against inventing unverified metrics
         if analysis["authentic_restriction"]:
-            verified = [
-                m for m in profile.get("documented_metrics", [])
-            ]
-            if verified:
+            verified = [m for m in profile.get("documented_metrics", [])]
+            chron_text = " ".join(
+                f"{j.get('role_title', '')} {' '.join(j.get('highlights', []))}"
+                for j in profile.get("career_chronology", [])
+            ).lower()
+            is_support_scope = any(
+                k in chron_text
+                for k in ("support", "ec2", "ticket", "troubleshooting", "instance", "g4dn", "p4d", "p3")
+            ) or any(
+                c.get("candidate_role_scope") in ("support_and_operations", "customer_advisory_and_engineering")
+                for c in (world_model or {}).get("employer_contexts", [])
+            )
+
+            if is_support_scope and analysis["target_metric"] in ("gpus_per_node", "nodes", "total_gpus"):
+                # Extract concrete documented instance types from resume if present
+                inst_matches = re.findall(r"\b(?:g4dn|g5|p3|p4d|p5|inf1|inf2|trn1)\.[a-z0-9]+\b", chron_text)
+                inst_desc = ", ".join(dict.fromkeys(inst_matches)) if inst_matches else "GPU-backed compute instances"
+                if "how large" in low_q:
+                    spoken = (
+                        f"Most of my hands-on work was troubleshooting individual hosts like {inst_desc}—"
+                        f"ranging from single-GPU instances up to multi-GPU nodes depending on the customer workload."
+                    )
+                elif analysis["target_metric"] == "gpus_per_node":
+                    spoken = (
+                        f"It depends on the instance family—across {inst_desc}, that ranges from a single GPU per host up to 8 GPUs on larger accelerated nodes."
+                    )
+                else:
+                    spoken = (
+                        "On the support side, my visibility was usually scoped to the customer's unhealthy instances or specific node group in a ticket—"
+                        "typically one host up to a handful of affected nodes—rather than the customer's full cluster inventory."
+                    )
+            elif verified:
                 vm = verified[0]
                 spoken = (
-                    f"From my verified numbers, I can speak directly to {vm['raw_text']} at {vm['employer']} ({vm['context']}). "
-                    f"I don't have the exact raw breakdown for that specific metric in front of me without guessing, though I can walk through how I'd measure and calculate it."
+                    f"From the metrics I directly tracked, I worked with {vm['raw_text']} at {vm['employer']} ({vm['context']}). "
+                    f"I don't have the exact breakdown for that figure offhand, though I can walk through how we measured and sized it."
                 )
             else:
                 spoken = (
-                    "I don't want to guess an exact historical figure I didn't directly log, though I can walk through the exact calculation methodology—multiplying active node/unit capacity by the measurement window and validating against ingress telemetry."
+                    "I don't have the exact historical figure offhand without pulling the original telemetry, though I can walk through "
+                    "how we sized node capacity and validated bottlenecks at the instance level."
                 )
             return {
                 "spoken_draft": spoken,
                 "project_used": None,
-                "evidence_basis": "general_technical_knowledge",
+                "evidence_basis": "documented_candidate_experience" if is_support_scope else "general_technical_knowledge",
             }
 
         # 3. Dynamic GPU-hours or composite derivation
@@ -134,6 +165,15 @@ class FollowUpAndPressureHandler:
                         )
                     else:
                         spoken = f"We ran {val:,.0f} {unit} in that cluster."
+                elif metric_name == "gpus_per_node":
+                    nodes_e = analysis["all_project_metrics"].get("nodes")
+                    total_e = analysis["all_project_metrics"].get("total_gpus")
+                    if nodes_e and total_e:
+                        spoken = (
+                            f"Each node carried {val:g} GPUs, across {nodes_e['original_value']:g} nodes for {total_e['original_value']:,.0f} GPUs total."
+                        )
+                    else:
+                        spoken = f"Each node had {val:g} GPUs."
                 elif metric_name == "p99_latency_ms" and entry.get("baseline_value") is not None:
                     b = entry["baseline_value"]
                     f = entry["final_value"]

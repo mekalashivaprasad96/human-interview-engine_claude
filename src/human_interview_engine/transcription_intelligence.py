@@ -85,6 +85,13 @@ class TranscriptionIntelligence:
                 repairs.append({"type": "phonetic_repair", "detail": f"Normalized ASR term to '{replacement}'"})
                 cleaned = new_cleaned
 
+        # Context-aware ASR repair: "notes" -> "nodes" when talking about GPUs, clusters, servers, instances
+        if re.search(r"\b(?:gpu|gpus|cluster|server|contain|large|ec2|instance|host)\b", cleaned, re.IGNORECASE):
+            repaired_notes = re.sub(r"\bnotes\b", "nodes", cleaned, flags=re.IGNORECASE)
+            if repaired_notes != cleaned:
+                repairs.append({"type": "phonetic_repair", "detail": "Normalized ASR term 'notes' to 'nodes' in compute/GPU context"})
+                cleaned = repaired_notes
+
         cleaned = re.sub(r"\s{2,}", " ", cleaned).strip()
 
         # 4. Detect interrupted / truncated fragments or material ambiguity before non-question checks

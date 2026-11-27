@@ -43,7 +43,7 @@ class ResponseValidator:
         low = (response_text or "").lower()
 
         if operating_mode != "coaching_evaluation":
-            # 1. Resume / AI character leak check
+            # 1. Resume / AI / internal engine meta character leak check
             leak_patterns = (
                 "based on the resume",
                 "based on your resume",
@@ -54,10 +54,31 @@ class ResponseValidator:
                 "as an ai",
                 "language model",
                 "you uploaded",
+                "the question doesn't specify",
+                "question does not specify",
+                "the interview scenario",
+                "interview scenario",
+                "verified node count",
+                "unverified metric",
+                "i'd answer in your voice",
+                "here's how i'd answer",
+                "here is how you could answer",
             )
             for pat in leak_patterns:
                 if pat in low:
                     issues.append({"code": "persona_resume_leak", "severity": "error", "detail": f"Contains character-breaking phrase '{pat}'."})
+
+            stripped_resp = (response_text or "").strip()
+            if (stripped_resp.startswith('"') and stripped_resp.endswith('"')) or (
+                stripped_resp.startswith("“") and stripped_resp.endswith("”")
+            ):
+                issues.append(
+                    {
+                        "code": "spoken_protocol_violation",
+                        "severity": "error",
+                        "detail": "Spoken output must not be wrapped in outer quotation marks.",
+                    }
+                )
 
             # 2. Spoken structure / STAR heading leak check
             for marker in self.rules.get("forbidden_spoken_structure_markers", []):

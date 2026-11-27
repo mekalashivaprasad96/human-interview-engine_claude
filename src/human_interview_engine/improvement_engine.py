@@ -61,10 +61,26 @@ class ContinuousImprovementEngine:
                 if not a:
                     continue
 
-                # 1. Breaking character / referencing resume
-                for leak in ("based on the resume", "based on your resume", "not mentioned in your resume", "as an ai", "provided documents"):
+                # 1. Breaking character / referencing resume or internal scenario labels
+                for leak in (
+                    "based on the resume",
+                    "based on your resume",
+                    "not mentioned in your resume",
+                    "as an ai",
+                    "provided documents",
+                    "the question doesn't specify",
+                    "the interview scenario",
+                    "verified node count",
+                    "i'd answer in your voice",
+                ):
                     if leak in a_low:
                         record("breaking_character_resume_reference", t_idx, a, f"Observed phrase '{leak}'.", observed=True)
+
+                stripped_a = a.strip()
+                if (stripped_a.startswith('"') and stripped_a.endswith('"')) or (
+                    stripped_a.startswith("“") and stripped_a.endswith("”")
+                ):
+                    record("breaking_character_resume_reference", t_idx, a, "Wrapped spoken answer in outer quotation marks.", observed=True)
 
                 # 2. Robotic communication / clichés / STAR labels
                 if any(m in a_low for m in star_markers) or any(p in a_low for p in banned):

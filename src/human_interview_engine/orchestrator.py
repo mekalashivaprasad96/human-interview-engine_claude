@@ -575,6 +575,7 @@ class HumanInterviewEngine:
                 project_id=active_project["project_id"] if active_project else None,
                 operating_mode=operating_mode,
                 profile=profile,
+                world_model=world_model,
             )
 
         if act == "hypothetical_gca" or operating_mode == "general_cognitive_ability":

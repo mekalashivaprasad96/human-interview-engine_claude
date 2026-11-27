@@ -31,6 +31,8 @@ class DynamicLengthController:
             category = "acknowledgment"
         elif transcription_meta.get("needs_clarification") or act == "interruption":
             category = "simple_confirmation"
+        elif act == "numerical_probe" and interviewer_analysis.get("is_multi_part"):
+            category = "technical_concept"
         elif act == "numerical_probe" and "how_calculated" not in precision:
             category = "numerical_clarification"
         elif act == "numerical_probe" and "how_calculated" in precision:

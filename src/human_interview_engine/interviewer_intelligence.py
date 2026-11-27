@@ -101,7 +101,24 @@ class InterviewerIntelligence:
             return "challenge"
         if any(k in low for k in ("what did you personally", "your own contribution", "did you build", "vs the team")):
             return "ownership_probe"
-        if any(k in low for k in ("how many", "how much", "how big was the team", "how big is the team", "team size", "how did you calculate", "what was the baseline", "gpu-hour", "percentage")):
+        if any(
+            k in low
+            for k in (
+                "how many",
+                "how much",
+                "how large",
+                "how big was the team",
+                "how big is the team",
+                "team size",
+                "node size",
+                "instance size",
+                "how did you calculate",
+                "what was the baseline",
+                "gpu-hour",
+                "percentage",
+                "contain",
+            )
+        ):
             return "numerical_probe"
         if any(k in low for k in ("exact config", "in more detail", "dig deeper", "walk through the implementation", "how was that implemented")):
             return "implementation_probe"
