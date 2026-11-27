@@ -6,6 +6,15 @@ Run commands with `PYTHONPATH=src` from the `human-interview-engine/` root direc
 PYTHONPATH=src python3 -m human_interview_engine --help
 ```
 
+## `error: Unknown operating mode '...'`
+`--mode` must be one of the IDs in `config/operating_modes.json` (for example `authentic_preparation`) or a short alias such as `authentic`, `immersive`, `technical`, `hiring-manager` or `coaching`. The error message lists every valid value.
+
+## `error: Resume file not found` / `error: Resume is empty`
+`--resume` and `--jd` accept a file path or the raw text. A value that looks like a path (ends in `.md`, `.txt`, `.json`, ... or starts with `/`, `./`, `~`) must exist; pass the text itself if you do not have a file.
+
+## `error: Invalid session_id` / `Invalid candidate_id`
+Session and candidate IDs may only contain letters, digits, `-` and `_`. Path separators and `..` are rejected so commands can never read or delete outside the memory directory.
+
 ## `FileNotFoundError: Session '...' not found`
 Check that you are passing the exact `--session-id` printed by `init`, and if using a custom `--memory-dir`, pass the same `--memory-dir` to both `init` and `turn`.
 

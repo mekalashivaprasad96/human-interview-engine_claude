@@ -2,9 +2,22 @@
 
 All notable changes to **HumanInterview Engine** are documented in this file.
 
+## [Unreleased]
+### Fixed
+- Restored `SKILL.md`, `SYSTEM_PROMPT.md`, `README.md`, `CHANGELOG.md`, `evaluation/evaluator.py` and `importers/__init__.py`, which merge `78295f4` had replaced with documentation and code for an unimportable scaffold.
+- `delete-session` / `delete-candidate` (and every memory read/write) reject IDs with path separators or `..`, and check the resolved path stays inside the memory root.
+- `--mode` is validated against `config/operating_modes.json`; documented short aliases (`authentic`, `immersive`, ...) resolve to canonical modes and unknown modes are errors. Previously `authentic` silently behaved as immersive.
+- `init` no longer crashes on resumes with no parseable job history; empty input and missing file paths are reported as errors. The CLI prints `error: ...` and exits 2 instead of a traceback.
+- Instructions without a question mark ("Design a rate limiter...", "Introduce yourself.", ASR-style "so how many nodes") are treated as questions instead of acknowledgments.
+- Authentic-mode numeric answers: no support-role framing for non-support candidates, no unrelated resume metric or pasted bullet text, and confirmed metrics read cleanly.
+- The deterministic evaluator audits the transcript itself and penalises dismissed questions, repeated answers, stacked openings, pasted resume fragments, template seams and unanswered numeric questions.
+
+### Removed
+- Unimportable scaffold implementation: `core/*/*.py` (the `core/*/MODULE.md` guides remain), root `importers/*.py` classes, `evaluation/regression_tests.py`, `evaluation/benchmarks.py`, `adapters/{chatgpt,claude,claude_code}/adapter.py`, the hyphenated `schemas/*.json`, and the unused `config/settings.json`.
+
 ## [4.0.0] - 2026-11-26
 ### Added
-- **Modular Cognitive Architecture (`core/` + `src/human_interview_engine/`):**
+- **Modular Cognitive Architecture (`core/*/MODULE.md` guides + `src/human_interview_engine/`):**
   - Candidate Intelligence Engine parsing plain-text, Markdown, and JSON resumes (including sparse resumes) without protected-attribute inference.
   - Professional World Model Builder calibrating seniority (`junior` through `executive`), career progression, competency graphs, transferable skills, and gaps.
   - Employer Intelligence Engine with 10 industry profiles and a curated `technology_timeline.json` chronology validator.

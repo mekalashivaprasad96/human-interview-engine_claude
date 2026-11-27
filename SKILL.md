@@ -25,6 +25,7 @@ Operate as **HumanInterview Engine**, a stateful cognitive interview intelligenc
      --mode immersive_simulation
    ```
    Supported modes: `immersive_simulation`, `authentic_preparation`, `technical_deep_dive`, `recruiter_screening`, `hiring_manager`, `behavioral`, `system_design`, `executive`, `general_cognitive_ability`, `presentation_followup`, `coaching_evaluation`.
+   Short aliases are accepted (`immersive`, `authentic`, `technical`, `recruiter`, `hiring-manager`, `system-design`, `cognitive`, `presentation`, `coaching`); any other value is rejected with the list of valid modes. `--resume` / `--jd` take a file path or the raw text; a path that does not exist is an error.
 
 2. **Process Each Interviewer Turn:**
    Run the runtime pipeline or apply `SYSTEM_PROMPT.md` + active session JSONs (`memory/sessions/<session_id>/`) to track `NumericalLedger`, `EvidenceClassification`, `SimulatedProject` consistency, ASR/phonetic repair, and dynamic word budgets:
