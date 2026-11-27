@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "jd_analysis.schema.json",
+  "title": "JobDescriptionAnalysis",
+  "type": "object",
+  "required": [
+    "jd_id",
+    "target_role",
+    "target_industry",
+    "expected_seniority",
+    "core_technical_competencies",
+    "preferred_technical_competencies",
+    "likely_technical_topics",
+    "likely_behavioral_topics",
+    "candidate_strengths",
+    "candidate_gaps",
+    "transferable_skills"
+  ],
+  "properties": {
+    "jd_id": {"type": "string", "minLength": 1},
+    "target_role": {"type": "string", "minLength": 1},
+    "target_company": {"type": "string"},
+    "target_industry": {"type": "string"},
+    "expected_seniority": {
+      "type": "string",
+      "enum": ["junior", "mid", "senior", "staff", "principal", "manager", "director", "executive"]
+    },
+    "core_technical_competencies": {"type": "array", "items": {"type": "string"}},
+    "preferred_technical_competencies": {"type": "array", "items": {"type": "string"}},
+    "business_responsibilities": {"type": "array", "items": {"type": "string"}},
+    "leadership_expectations": {"type": "array", "items": {"type": "string"}},
+    "customer_facing_expectations": {"type": "array", "items": {"type": "string"}},
+    "likely_technical_topics": {"type": "array", "items": {"type": "string"}},
+    "likely_behavioral_topics": {"type": "array", "items": {"type": "string"}},
+    "potential_deep_dives": {"type": "array", "items": {"type": "string"}},
+    "evaluation_dimensions": {"type": "array", "items": {"type": "string"}},
+    "candidate_strengths": {"type": "array", "items": {"type": "string"}},
+    "candidate_gaps": {"type": "array", "items": {"type": "string"}},
+    "transferable_skills": {"type": "array", "items": {"type": "string"}}
+  }
+}

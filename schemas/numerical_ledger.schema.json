@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "numerical_ledger.schema.json",
+  "title": "NumericalLedger",
+  "type": "object",
+  "required": ["session_id", "candidate_id", "entries", "consistency_checks"],
+  "properties": {
+    "session_id": {"type": "string", "minLength": 1},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "entry_id",
+          "project_id",
+          "metric_name",
+          "original_value",
+          "unit",
+          "scope",
+          "measurement_period",
+          "measurement_methodology",
+          "evidence_status"
+        ],
+        "properties": {
+          "entry_id": {"type": "string", "minLength": 1},
+          "project_id": {"type": "string"},
+          "metric_name": {"type": "string"},
+          "original_value": {"type": "number"},
+          "unit": {"type": "string"},
+          "scope": {"type": "string"},
+          "measurement_period": {"type": "string"},
+          "baseline_value": {"type": ["number", "null"]},
+          "final_value": {"type": ["number", "null"]},
+          "percentage_change": {"type": ["number", "null"]},
+          "derived_from": {"type": "array", "items": {"type": "string"}},
+          "formula": {"type": "string"},
+          "assumptions": {"type": "array", "items": {"type": "string"}},
+          "measurement_methodology": {"type": "string"},
+          "evidence_status": {"type": "string"},
+          "locked_at_turn": {"type": ["integer", "null"]}
+        }
+      }
+    },
+    "consistency_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule_name", "passed", "details"],
+        "properties": {
+          "rule_name": {"type": "string"},
+          "passed": {"type": "boolean"},
+          "details": {"type": "string"}
+        }
+      }
+    }
+  }
+}

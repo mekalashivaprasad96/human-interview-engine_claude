@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "simulated_project.schema.json",
+  "title": "SimulatedProjectCatalog",
+  "type": "object",
+  "required": ["candidate_id", "projects"],
+  "properties": {
+    "candidate_id": {"type": "string", "minLength": 1},
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "project_id",
+          "title",
+          "employer",
+          "employment_period",
+          "start_year",
+          "end_year",
+          "business_objective",
+          "project_scope",
+          "technical_environment",
+          "architecture_summary",
+          "technology_stack",
+          "infrastructure_scale",
+          "team_structure",
+          "candidate_responsibilities",
+          "individual_contributions",
+          "implementation_decisions",
+          "constraints",
+          "challenges",
+          "testing_methodology",
+          "operational_considerations",
+          "metrics",
+          "outcomes",
+          "lessons_learned",
+          "evidence_status"
+        ],
+        "properties": {
+          "project_id": {"type": "string", "minLength": 1},
+          "title": {"type": "string"},
+          "employer": {"type": "string"},
+          "employment_period": {"type": "string"},
+          "start_year": {"type": "integer"},
+          "end_year": {"type": "integer"},
+          "business_objective": {"type": "string"},
+          "project_scope": {"type": "string"},
+          "technical_environment": {"type": "string"},
+          "architecture_summary": {"type": "string"},
+          "components": {"type": "array", "items": {"type": "object"}},
+          "technology_stack": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "purpose"],
+              "properties": {
+                "name": {"type": "string"},
+                "version_or_era": {"type": "string"},
+                "introduced_year": {"type": ["integer", "null"]},
+                "purpose": {"type": "string"}
+              }
+            }
+          },
+          "dependencies": {"type": "array", "items": {"type": "string"}},
+          "infrastructure_scale": {"type": "object"},
+          "team_structure": {
+            "type": "object",
+            "required": ["team_size", "candidate_role"],
+            "properties": {
+              "team_size": {"type": "integer", "minimum": 1},
+              "candidate_role": {"type": "string"},
+              "collaborators": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "candidate_responsibilities": {"type": "array", "items": {"type": "string"}},
+          "individual_contributions": {"type": "array", "items": {"type": "string"}},
+          "implementation_decisions": {"type": "array", "items": {"type": "object"}},
+          "constraints": {"type": "array", "items": {"type": "string"}},
+          "challenges": {"type": "array", "items": {"type": "string"}},
+          "testing_methodology": {"type": "string"},
+          "operational_considerations": {"type": "object"},
+          "metrics": {"type": "object"},
+          "outcomes": {"type": "string"},
+          "lessons_learned": {"type": "string"},
+          "evidence_status": {"type": "string"}
+        }
+      }
+    }
+  }
+}

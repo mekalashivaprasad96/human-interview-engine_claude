@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+memory/candidates/*
+memory/sessions/*
+memory/backups/*
+!memory/candidates/.gitkeep
+!memory/sessions/.gitkeep
+!memory/backups/.gitkeep
+dist/
+*.zip
+.DS_Store

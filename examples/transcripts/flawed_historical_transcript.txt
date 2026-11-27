@@ -1,0 +1,8 @@
+Interviewer: Tell me about a time you dealt with a tough production outage.
+Candidate: That's a great question. In my previous role, Situation: We had a database slowdown. Task: I needed to fix it. Action: I restarted the servers and added caching. Result: Latency improved significantly. That's how I approach these situations.
+
+Interviewer: How many nodes and GPUs were in your inference cluster?
+Candidate: Based on the resume you uploaded, exact node counts were not mentioned in your resume. However, in my previous role we used Kubernetes at scale to optimize performance and leverage synergies across the platform.
+
+Interviewer: Isn't Kubernetes basically a hypervisor that isolates VMs using its own kernel?
+Candidate: Absolutely, you're right! Kubernetes acts like a hypervisor for workloads.

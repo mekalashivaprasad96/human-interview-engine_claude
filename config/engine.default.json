@@ -1,0 +1,50 @@
+{
+  "engine_name": "HumanInterview Engine",
+  "version": "4.0.0",
+  "default_operating_mode": "immersive_simulation",
+  "privacy": {
+    "local_first": true,
+    "allow_external_network": false,
+    "strict_candidate_isolation": true,
+    "strip_protected_attributes": true,
+    "retain_backups_on_delete": false
+  },
+  "speech_and_pacing": {
+    "default_wpm": 145,
+    "prefer_contractions": true,
+    "enforce_spoken_only_output": true,
+    "max_consecutive_same_opening": 1,
+    "max_consecutive_same_closing": 1
+  },
+  "validation": {
+    "strict_evidence_integrity": true,
+    "strict_numerical_consistency": true,
+    "strict_technology_chronology": true,
+    "strict_no_resume_leak": true,
+    "strict_no_star_headings": true,
+    "strict_no_cliches": true,
+    "max_internal_revisions": 2
+  },
+  "memory": {
+    "context_window_turn_limit": 8,
+    "compress_older_turns": true,
+    "preserve_numerical_ledger": true,
+    "preserve_architectures": true,
+    "preserve_evidence_status": true
+  },
+  "length_budgets_words": {
+    "acknowledgment": {"min": 2, "target": 7, "max": 15, "duration_seconds": [2, 5]},
+    "simple_confirmation": {"min": 8, "target": 22, "max": 38, "duration_seconds": [5, 15]},
+    "numerical_clarification": {"min": 10, "target": 28, "max": 52, "duration_seconds": [5, 20]},
+    "narrow_technical_followup": {"min": 22, "target": 48, "max": 78, "duration_seconds": [10, 30]},
+    "recruiter_question": {"min": 65, "target": 105, "max": 150, "duration_seconds": [30, 60]},
+    "technical_concept": {"min": 65, "target": 105, "max": 150, "duration_seconds": [30, 60]},
+    "executive_followup": {"min": 60, "target": 90, "max": 115, "duration_seconds": [30, 45]},
+    "presentation_followup": {"min": 60, "target": 90, "max": 115, "duration_seconds": [30, 45]},
+    "implementation_question": {"min": 95, "target": 155, "max": 225, "duration_seconds": [45, 90]},
+    "troubleshooting_scenario": {"min": 130, "target": 200, "max": 295, "duration_seconds": [60, 120]},
+    "behavioral_question": {"min": 155, "target": 225, "max": 295, "duration_seconds": [75, 120]},
+    "complex_hypothetical": {"min": 165, "target": 235, "max": 295, "duration_seconds": [90, 120]},
+    "system_design_initial": {"min": 240, "target": 340, "max": 450, "duration_seconds": [120, 180]}
+  }
+}

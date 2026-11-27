@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence_classification.schema.json",
+  "title": "EvidenceClassificationLedger",
+  "type": "object",
+  "required": ["candidate_id", "session_id", "items"],
+  "properties": {
+    "candidate_id": {"type": "string", "minLength": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item_id", "claim", "category", "source_reference", "confirmed_by_candidate"],
+        "properties": {
+          "item_id": {"type": "string", "minLength": 1},
+          "claim": {"type": "string", "minLength": 1},
+          "category": {
+            "type": "string",
+            "enum": [
+              "documented_candidate_experience",
+              "candidate_confirmed_experience",
+              "verified_numerical_information",
+              "calculated_numerical_information",
+              "general_technical_knowledge",
+              "transferable_professional_knowledge",
+              "reasonable_contextual_inference",
+              "unconfirmed_implementation_detail",
+              "illustrative_estimate",
+              "fictional_simulation_scenario"
+            ]
+          },
+          "source_reference": {"type": "string"},
+          "confirmed_by_candidate": {"type": "boolean"},
+          "confirmed_at": {"type": ["string", "null"]}
+        }
+      }
+    }
+  }
+}

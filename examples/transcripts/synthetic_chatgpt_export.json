@@ -1,0 +1,44 @@
+[
+  {
+    "id": "conv-chatgpt-001",
+    "title": "Mock Technical Deep Dive",
+    "mapping": {
+      "root": {
+        "id": "root",
+        "message": null
+      },
+      "n1": {
+        "id": "n1",
+        "message": {
+          "author": {"role": "user"},
+          "create_time": 1730000100,
+          "content": {"parts": ["How did you reduce p99 latency in your inference platform?"]}
+        }
+      },
+      "n2": {
+        "id": "n2",
+        "message": {
+          "author": {"role": "assistant"},
+          "create_time": 1730000120,
+          "content": {"parts": ["In my previous role, I reduced latency by optimizing the cluster. That's how I approach these situations."]}
+        }
+      },
+      "n3": {
+        "id": "n3",
+        "message": {
+          "author": {"role": "user"},
+          "create_time": 1730000180,
+          "content": {"parts": ["What did you personally implement vs the team?"]}
+        }
+      },
+      "n4": {
+        "id": "n4",
+        "message": {
+          "author": {"role": "assistant"},
+          "create_time": 1730000200,
+          "content": {"parts": ["We worked together to deliver the improvements across the stack."]}
+        }
+      }
+    }
+  }
+]

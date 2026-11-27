@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "experience_story_bank.schema.json",
+  "title": "ExperienceStoryBank",
+  "type": "object",
+  "required": ["candidate_id", "stories"],
+  "properties": {
+    "candidate_id": {"type": "string", "minLength": 1},
+    "stories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "story_id",
+          "title",
+          "employer",
+          "period",
+          "competencies_demonstrated",
+          "summary",
+          "individual_ownership",
+          "team_context",
+          "outcome",
+          "lessons_learned",
+          "evidence_status",
+          "times_used"
+        ],
+        "properties": {
+          "story_id": {"type": "string", "minLength": 1},
+          "title": {"type": "string"},
+          "employer": {"type": "string"},
+          "period": {"type": "string"},
+          "project_id": {"type": ["string", "null"]},
+          "competencies_demonstrated": {"type": "array", "items": {"type": "string"}},
+          "summary": {"type": "string"},
+          "challenge": {"type": "string"},
+          "individual_ownership": {"type": "array", "items": {"type": "string"}},
+          "team_context": {"type": "string"},
+          "decisions_made": {"type": "array", "items": {"type": "string"}},
+          "obstacles_or_failures": {"type": "string"},
+          "outcome": {"type": "string"},
+          "lessons_learned": {"type": "string"},
+          "evidence_status": {"type": "string"},
+          "times_used": {"type": "integer", "minimum": 0},
+          "last_used_turn": {"type": ["integer", "null"]}
+        }
+      }
+    }
+  }
+}

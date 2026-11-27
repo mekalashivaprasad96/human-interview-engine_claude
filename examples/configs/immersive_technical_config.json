@@ -1,0 +1,9 @@
+{
+  "operating_mode": "immersive_simulation",
+  "interviewer_type": "technical_specialist",
+  "communication_preferences": {
+    "preferred_contractions": true,
+    "target_wpm": 145,
+    "verbosity_bias": "balanced"
+  }
+}

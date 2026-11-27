@@ -1,0 +1,84 @@
+{
+  "industries": {
+    "retail_ecommerce": {
+      "label": "Retail & E-Commerce",
+      "keywords": ["retail", "ecommerce", "e-commerce", "checkout", "cart", "inventory", "fulfillment", "pos", "merchandising", "storefront"],
+      "priorities": ["peak seasonal availability", "checkout latency", "inventory consistency", "payment reliability", "graceful degradation during traffic spikes"],
+      "regulatory": ["PCI-DSS", "GDPR/CCPA"],
+      "security_posture": "Cardholder data isolation, bot/fraud mitigation, edge rate limiting",
+      "change_management": "Freeze windows around peak retail events, canary rollouts, instant feature flags"
+    },
+    "financial_services": {
+      "label": "Financial Services & Fintech",
+      "keywords": ["bank", "fintech", "payments", "trading", "ledger", "credit", "wealth", "insurance", "clearing", "settlement", "mortgage"],
+      "priorities": ["transaction correctness", "auditability", "high availability", "deterministic recovery", "data integrity"],
+      "regulatory": ["SOX", "PCI-DSS", "SOC 2", "FINRA/SEC"],
+      "security_posture": "Strict RBAC, encryption in transit/at rest, immutable audit logs, segregation of duties",
+      "change_management": "Controlled CAB approvals, dual review, verifiable rollback plans, reconciliation checks"
+    },
+    "healthcare": {
+      "label": "Healthcare & Life Sciences",
+      "keywords": ["health", "healthcare", "medical", "clinical", "ehr", "hl7", "fhir", "pharma", "patient", "diagnostic", "hospital"],
+      "priorities": ["patient safety", "PHI confidentiality", "system reliability", "interoperability", "audit traceability"],
+      "regulatory": ["HIPAA", "HITECH", "FDA 21 CFR Part 11", "HITRUST"],
+      "security_posture": "Minimum necessary access, PHI tokenization/de-identification, BAA-compliant tooling",
+      "change_management": "Validated deployments, strict regression verification, downtime impact notices"
+    },
+    "cloud_infrastructure": {
+      "label": "Cloud & Distributed Infrastructure",
+      "keywords": ["cloud", "iaas", "paas", "kubernetes", "distributed", "control plane", "multi-tenant", "hyperscale", "compute", "storage", "gpu"],
+      "priorities": ["multi-tenant isolation", "blast-radius containment", "SLO adherence", "control-plane resilience", "operational automation"],
+      "regulatory": ["SOC 2", "ISO 27001", "FedRAMP"],
+      "security_posture": "Tenant boundary enforcement, workload identity, mutual TLS, kernel/container hardening",
+      "change_management": "Zonal/regional progressive rollouts, automated rollback on SLO burn rate"
+    },
+    "ai_ml_platform": {
+      "label": "AI & Machine Learning Platforms",
+      "keywords": ["ai", "ml", "machine learning", "llm", "inference", "training", "gpu", "cuda", "model serving", "rag", "vector", "mlops"],
+      "priorities": ["GPU utilization efficiency", "tail latency (TTFT/TPOT)", "evaluation reproducibility", "model/data lineage", "cost per token/inference"],
+      "regulatory": ["SOC 2", "AI governance/data privacy"],
+      "security_posture": "Prompt/data isolation, PII redaction, model artifact provenance, tenant quota enforcement",
+      "change_management": "Shadow traffic evaluation, offline/online eval gates, canary model routing"
+    },
+    "semiconductor": {
+      "label": "Semiconductor & Hardware Engineering",
+      "keywords": ["semiconductor", "silicon", "asic", "fpga", "rtl", "verilog", "uvm", "wafer", "yield", "firmware", "timing", "validation", "soc"],
+      "priorities": ["hardware validation precision", "deterministic regression benches", "power/performance/area (PPA)", "yield diagnostics", "bring-up repeatability"],
+      "regulatory": ["ISO 9001", "automotive/aerospace quality standards where applicable"],
+      "security_posture": "IP protection, cleanroom access control, signed firmware/secure boot",
+      "change_management": "Strict sign-off gates, golden reference comparison, hardware-in-the-loop verification"
+    },
+    "mobile_applications": {
+      "label": "Mobile Application Engineering",
+      "keywords": ["ios", "android", "mobile", "swift", "kotlin", "react native", "flutter", "app store", "play store", "frame rate"],
+      "priorities": ["UI responsiveness and cold-start speed", "battery/memory efficiency", "offline resilience", "OS/device matrix compatibility", "crash-free sessions"],
+      "regulatory": ["App Store/Play Store privacy rules", "GDPR/CCPA"],
+      "security_posture": "Certificate pinning, secure keychain/keystore storage, minimal permissions",
+      "change_management": "Phased store rollouts, remote config kill switches, crashlytics monitoring"
+    },
+    "cybersecurity": {
+      "label": "Cybersecurity",
+      "keywords": ["security", "soc", "siem", "iam", "zero trust", "threat", "vulnerability", "incident response", "appsec", "pentest", "cryptography"],
+      "priorities": ["mean time to detect/contain", "false-positive reduction", "least privilege enforcement", "supply-chain integrity", "compliance evidence"],
+      "regulatory": ["NIST", "ISO 27001", "SOC 2", "FedRAMP"],
+      "security_posture": "Defense-in-depth, zero-trust identity, hardware-backed keys",
+      "change_management": "Out-of-band break-glass paths, policy-as-code dry runs before enforcement"
+    },
+    "networking_telecom": {
+      "label": "Networking & Telecommunications",
+      "keywords": ["network", "bgp", "ospf", "dns", "cdn", "sdn", "5g", "telecom", "packet", "load balancer", "firewall", "vpn"],
+      "priorities": ["packet loss minimization", "routing convergence speed", "control/data plane separation", "high-throughput low jitter", "redundancy"],
+      "regulatory": ["Telecom reliability mandates", "CALEA/regional compliance"],
+      "security_posture": "RPKI/BGP route filtering, DDoS scrubbing, management-plane isolation",
+      "change_management": "Maintenance windows, out-of-band console access, automated pre/post route diff checks"
+    },
+    "enterprise_saas_customer": {
+      "label": "Enterprise SaaS, Solutions Architecture & Customer Engineering",
+      "keywords": ["solutions architect", "tam", "technical account", "customer engineering", "sales engineering", "consulting", "enterprise", "saas", "adoption"],
+      "priorities": ["customer time-to-value", "architecture fit and investment protection", "executive trust", "renewal/expansion outcomes", "escalation containment"],
+      "regulatory": ["SOC 2", "GDPR", "industry-specific customer compliance"],
+      "security_posture": "SSO/SAML/OIDC integration, tenant isolation, customer data residency",
+      "change_management": "Customer communication plans, staged onboarding, success criteria sign-off"
+    }
+  }
+}
