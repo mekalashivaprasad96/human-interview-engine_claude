@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any, Callable
@@ -15,6 +16,81 @@ from human_interview_engine.config_loader import EngineConfig  # noqa: E402
 from human_interview_engine.models import clamp_float, short_id, utc_now_iso  # noqa: E402
 from human_interview_engine.numerical_ledger import NumericalLedger  # noqa: E402
 from human_interview_engine.schema_validator import assert_valid_schema  # noqa: E402
+from human_interview_engine.transcription_intelligence import TranscriptionIntelligence  # noqa: E402
+
+_ACK_ONLY_RE = re.compile(
+    r"^(?:got it|okay|ok|sure|sounds good|understood|makes sense|thanks|thank you)[\s,.!—-]*"
+    r"(?:thanks for having me|thank you)?[.!\s]*$",
+    re.IGNORECASE,
+)
+_HEDGE_RE = re.compile(r"\b(?:don't have|do not have|not sure|offhand|wouldn't want to guess|can't recall)\b", re.IGNORECASE)
+_OPENER_STEMS = ("on that point", "on that", "in practice", "from a practical standpoint", "on that note", "honestly")
+_TEMPLATE_SEAM_RE = re.compile(
+    r"\bacross (?:migrated|built|led|reduced|managed|owned|designed)\b"
+    r"|\ba [AEIO][a-z]+\b"
+    r"|\b1 years\b|\bat my current team\b"
+)
+
+
+def _word_set(text: str) -> set[str]:
+    return set(re.findall(r"[a-z0-9']+", (text or "").lower()))
+
+
+def audit_turns(turns: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Transcript-level checks that do not rely on the per-turn validator's own verdict.
+
+    Flags real questions answered with a bare acknowledgment, near-duplicate answers to
+    different questions, stacked opening stems, raw resume fragments in parentheses,
+    template seams, and numeric questions answered without any number or honest hedge.
+    """
+    issues: list[dict[str, Any]] = []
+    prior: list[tuple[str, set[str]]] = []
+    for t in turns:
+        q = (t.get("cleaned_transcript") or "").strip()
+        a = (t.get("candidate_response") or "").strip()
+        act = (t.get("interviewer_analysis") or {}).get("question_act", "")
+        idx = t.get("turn_index")
+        low_a = a.lower()
+        is_question = "?" in q or TranscriptionIntelligence._has_question_or_task_cue(q)
+
+        if is_question and act not in ("closing", "interruption") and _ACK_ONLY_RE.match(a):
+            issues.append({"turn_index": idx, "code": "dismissed_question", "severity": "error",
+                           "detail": f"Question answered only with an acknowledgment: {a!r}."})
+
+        words = _word_set(a)
+        if len(words) >= 12:
+            for prev_q, prev_words in prior:
+                if prev_q.lower() == q.lower():
+                    continue
+                overlap = len(words & prev_words) / max(1, len(words | prev_words))
+                if overlap >= 0.8:
+                    issues.append({"turn_index": idx, "code": "repeated_answer", "severity": "warning",
+                                   "detail": f"Answer is {overlap:.0%} identical to the answer to {prev_q!r}."})
+                    break
+            prior.append((q, words))
+
+        head = low_a[:120]
+        stems = [st for st in _OPENER_STEMS if head.startswith(st) or f", {st}" in head[:60]]
+        first_clause = low_a.split(",", 1)[0]
+        if len(stems) >= 2 or (0 < len(first_clause.split()) <= 4 and low_a.count(first_clause + ",") >= 2):
+            issues.append({"turn_index": idx, "code": "stacked_opening", "severity": "warning",
+                           "detail": "Opening stem is stacked or repeated."})
+
+        for frag in re.findall(r"\(([^)]*)\)", a):
+            if len(frag.split()) >= 6:
+                issues.append({"turn_index": idx, "code": "raw_resume_fragment", "severity": "error",
+                               "detail": f"Spoken answer contains a pasted fragment: ({frag[:80]})."})
+                break
+
+        if _TEMPLATE_SEAM_RE.search(a):
+            issues.append({"turn_index": idx, "code": "template_seam", "severity": "warning",
+                           "detail": f"Template join is visible: {_TEMPLATE_SEAM_RE.search(a).group(0)!r}."})
+
+        if re.search(r"\bhow (?:many|much|long|large|big)\b", q.lower()) and not re.search(r"\d", a) \
+                and not _HEDGE_RE.search(a) and act not in ("closing", "interruption"):
+            issues.append({"turn_index": idx, "code": "unanswered_numeric", "severity": "warning",
+                           "detail": "Numeric question answered without a number or an explicit hedge."})
+    return issues
 
 
 class InterviewEvaluator:
@@ -76,6 +152,24 @@ class InterviewEvaluator:
                 elif code in ("cliche_detected", "repetitive_opening"):
                     cliche_warnings += 1
 
+        audit = audit_turns(turns)
+        findings.extend(audit)
+        audit_count = {code: sum(1 for i in audit if i["code"] == code) for code in (
+            "dismissed_question", "repeated_answer", "stacked_opening", "raw_resume_fragment",
+            "template_seam", "unanswered_numeric",
+        )}
+        dismissed = audit_count["dismissed_question"]
+        repeated = audit_count["repeated_answer"]
+        stacked = audit_count["stacked_opening"]
+        fragments = audit_count["raw_resume_fragment"]
+        seams = audit_count["template_seam"]
+        unanswered = audit_count["unanswered_numeric"]
+        leak_errors += fragments
+        cliche_warnings += stacked + seams
+        total_errors += dismissed + fragments
+        if dismissed:
+            hard_failures.append(f"Real question answered with only an acknowledgment in {dismissed} turn(s).")
+
         failed_ledger_checks = [c for c in checks if not c["passed"]]
         if failed_ledger_checks:
             for fc in failed_ledger_checks:
@@ -93,27 +187,33 @@ class InterviewEvaluator:
         max_lat = round(max(latencies), 2) if latencies else 0.0
 
         # Deterministic score calculation on 1.0 - 5.0 scale
+        # Penalties are scaled by session length so one flaw in a 25-turn session still registers
+        # but does not zero the score; a dismissed question costs more than a stylistic slip.
+        rate = 10.0 / n_turns
+        dis = dismissed * rate
+        rep = repeated * rate
+        unans = unanswered * rate
         det_scores = {
-            "human_naturalness": clamp_float(4.8 - 0.5 * cliche_warnings - 0.8 * leak_errors),
-            "conversational_authenticity": clamp_float(4.8 - 0.6 * cliche_warnings - 1.5 * leak_errors),
-            "question_relevance": clamp_float(4.8 - 0.5 * total_errors),
-            "information_density": clamp_float(4.7 - 0.4 * length_warnings),
+            "human_naturalness": clamp_float(4.8 - 0.5 * cliche_warnings - 0.8 * leak_errors - 0.3 * rep),
+            "conversational_authenticity": clamp_float(4.8 - 0.6 * cliche_warnings - 1.5 * leak_errors - 0.4 * rep),
+            "question_relevance": clamp_float(4.8 - 0.5 * total_errors - 1.0 * dis - 0.5 * unans),
+            "information_density": clamp_float(4.7 - 0.4 * length_warnings - 0.6 * rep - 0.4 * unans),
             "technical_accuracy": clamp_float(4.8 - 0.7 * chrono_errors - 0.5 * total_errors),
-            "implementation_depth": clamp_float(4.7 - 0.4 * total_errors),
-            "numerical_accuracy": clamp_float(4.9 - 1.2 * num_errors - 1.0 * len(failed_ledger_checks)),
+            "implementation_depth": clamp_float(4.7 - 0.4 * total_errors - 0.5 * dis),
+            "numerical_accuracy": clamp_float(4.9 - 1.2 * num_errors - 1.0 * len(failed_ledger_checks) - 0.6 * unans),
             "mathematical_consistency": clamp_float(5.0 - 1.5 * num_errors - 1.5 * len(failed_ledger_checks)),
-            "professional_credibility": clamp_float(4.8 - 0.6 * chrono_errors - 0.8 * evidence_errors),
+            "professional_credibility": clamp_float(4.8 - 0.6 * chrono_errors - 0.8 * evidence_errors - 0.8 * fragments),
             "employer_alignment": clamp_float(4.8 - 1.0 * chrono_errors),
             "seniority_alignment": clamp_float(4.8 - 0.4 * total_errors),
             "individual_ownership": clamp_float(4.7 - 0.4 * total_errors),
             "business_judgment": clamp_float(4.6 - 0.3 * total_errors),
             "leadership_maturity": clamp_float(4.6 - 0.3 * total_errors),
-            "context_awareness": clamp_float(4.8 - 0.5 * total_errors),
-            "interviewer_adaptation": clamp_float(4.7 - 0.4 * length_warnings),
-            "follow_up_consistency": clamp_float(4.9 - 1.0 * num_errors - 0.5 * total_errors),
-            "appropriate_answer_length": clamp_float(4.9 - 0.6 * length_warnings),
-            "evidence_integrity": clamp_float(5.0 - 2.0 * evidence_errors),
-            "technical_defensibility": clamp_float(4.8 - 0.5 * total_errors),
+            "context_awareness": clamp_float(4.8 - 0.5 * total_errors - 0.8 * dis - 0.3 * rep),
+            "interviewer_adaptation": clamp_float(4.7 - 0.4 * length_warnings - 0.8 * dis),
+            "follow_up_consistency": clamp_float(4.9 - 1.0 * num_errors - 0.5 * total_errors - 0.4 * rep),
+            "appropriate_answer_length": clamp_float(4.9 - 0.6 * length_warnings - 0.8 * dis),
+            "evidence_integrity": clamp_float(5.0 - 2.0 * evidence_errors - 1.0 * fragments),
+            "technical_defensibility": clamp_float(4.8 - 0.5 * total_errors - 0.3 * unans),
             "response_latency": clamp_float(5.0 if avg_lat < 100.0 else (4.2 if avg_lat < 500.0 else 3.0)),
         }
 
