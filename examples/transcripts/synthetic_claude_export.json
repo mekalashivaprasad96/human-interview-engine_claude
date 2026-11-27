@@ -1,0 +1,22 @@
+{
+  "uuid": "conv-claude-001",
+  "name": "Behavioral Mock Practice",
+  "chat_messages": [
+    {
+      "sender": "human",
+      "text": "Tell me about a time you disagreed with a product manager on timeline versus reliability."
+    },
+    {
+      "sender": "assistant",
+      "text": "Situation: We had a tight deadline. Task: Ship safely. Action: We compromised on scope. Result: Launch succeeded."
+    },
+    {
+      "sender": "human",
+      "text": "How many users were affected when the legacy webhook timed out?"
+    },
+    {
+      "sender": "assistant",
+      "text": "As an AI, I cannot answer because you have not given me that exact count in the provided documents."
+    }
+  ]
+}

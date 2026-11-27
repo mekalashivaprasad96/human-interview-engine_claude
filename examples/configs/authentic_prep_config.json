@@ -1,0 +1,9 @@
+{
+  "operating_mode": "authentic_preparation",
+  "interviewer_type": "hiring_manager",
+  "communication_preferences": {
+    "preferred_contractions": true,
+    "target_wpm": 140,
+    "verbosity_bias": "concise"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "interview_session.schema.json",
+  "title": "InterviewSession",
+  "type": "object",
+  "required": [
+    "session_id",
+    "candidate_id",
+    "resume_version",
+    "jd_id",
+    "operating_mode",
+    "created_at",
+    "updated_at",
+    "turns",
+    "stories_used",
+    "discussed_employers",
+    "discussed_projects"
+  ],
+  "properties": {
+    "session_id": {"type": "string", "minLength": 1},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "resume_version": {"type": "string"},
+    "jd_id": {"type": "string"},
+    "operating_mode": {"type": "string"},
+    "interviewer_context": {"type": "object"},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "active_project_id": {"type": ["string", "null"]},
+    "clarification_pending": {
+      "type": "object",
+      "required": ["active"],
+      "properties": {
+        "active": {"type": "boolean"},
+        "question_asked": {"type": ["string", "null"]},
+        "turn_index": {"type": ["integer", "null"]}
+      }
+    },
+    "discussed_employers": {"type": "array", "items": {"type": "string"}},
+    "discussed_projects": {"type": "array", "items": {"type": "string"}},
+    "discussed_architectures": {"type": "array", "items": {"type": "string"}},
+    "discussed_tech_versions": {"type": "object"},
+    "established_assumptions": {"type": "array", "items": {"type": "string"}},
+    "interviewer_provided_facts": {"type": "array", "items": {"type": "string"}},
+    "corrections_log": {"type": "array", "items": {"type": "object"}},
+    "stories_used": {"type": "array", "items": {"type": "string"}},
+    "recent_openings": {"type": "array", "items": {"type": "string"}},
+    "recent_closings": {"type": "array", "items": {"type": "string"}},
+    "compressed_summary": {"type": "string"},
+    "turns": {"type": "array", "items": {"type": "object"}}
+  }
+}

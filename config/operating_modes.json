@@ -1,0 +1,92 @@
+{
+  "modes": {
+    "immersive_simulation": {
+      "label": "Immersive Candidate Simulation",
+      "allow_fictional_scenarios": true,
+      "allow_illustrative_numbers_as_scenario": true,
+      "spoken_only_output": true,
+      "default_audience": "hiring_manager",
+      "description": "Roleplay a coherent, realistic candidate persona with consistent simulated scenarios and persistent numerical modeling for mock interview practice."
+    },
+    "authentic_preparation": {
+      "label": "Authentic Candidate Preparation",
+      "allow_fictional_scenarios": false,
+      "allow_illustrative_numbers_as_scenario": false,
+      "spoken_only_output": true,
+      "default_audience": "hiring_manager",
+      "description": "Ground responses strictly in documented experience, candidate-confirmed facts, transferable expertise, calculations, and transparent assumptions without presenting invented history as personal fact."
+    },
+    "technical_deep_dive": {
+      "label": "Technical Deep Dive",
+      "allow_fictional_scenarios": true,
+      "allow_illustrative_numbers_as_scenario": true,
+      "spoken_only_output": true,
+      "default_audience": "technical_specialist",
+      "description": "Prioritize implementation specifics, configuration, architecture, failure modes, validation, and deep follow-up consistency."
+    },
+    "recruiter_screening": {
+      "label": "Recruiter Screening",
+      "allow_fictional_scenarios": true,
+      "allow_illustrative_numbers_as_scenario": true,
+      "spoken_only_output": true,
+      "default_audience": "recruiter",
+      "description": "Prioritize concise career narrative, motivation, core qualifications, and accessible technical framing."
+    },
+    "hiring_manager": {
+      "label": "Hiring Manager Interview",
+      "allow_fictional_scenarios": true,
+      "allow_illustrative_numbers_as_scenario": true,
+      "spoken_only_output": true,
+      "default_audience": "hiring_manager",
+      "description": "Balance individual ownership, engineering judgment, cross-functional collaboration, and business priorities."
+    },
+    "behavioral": {
+      "label": "Behavioral Interview",
+      "allow_fictional_scenarios": true,
+      "allow_illustrative_numbers_as_scenario": true,
+      "spoken_only_output": true,
+      "default_audience": "behavioral_interviewer",
+      "description": "Communicate implicit STAR stories with clear personal ownership, realistic trade-offs, failures, and lessons learned."
+    },
+    "system_design": {
+      "label": "System Design Interview",
+      "allow_fictional_scenarios": true,
+      "allow_illustrative_numbers_as_scenario": true,
+      "spoken_only_output": true,
+      "default_audience": "system_design_interviewer",
+      "description": "Drive requirements, scale, availability, security, component interactions, trade-offs, operational complexity, and failure handling."
+    },
+    "executive": {
+      "label": "Executive Interview",
+      "allow_fictional_scenarios": true,
+      "allow_illustrative_numbers_as_scenario": true,
+      "spoken_only_output": true,
+      "default_audience": "executive",
+      "description": "Lead with business outcomes, strategic trade-offs, financial impact, risk management, and executive-grade clarity."
+    },
+    "general_cognitive_ability": {
+      "label": "General Cognitive Ability",
+      "allow_fictional_scenarios": false,
+      "allow_illustrative_numbers_as_scenario": false,
+      "spoken_only_output": true,
+      "default_audience": "hiring_manager",
+      "description": "Apply forward-looking structured reasoning, root-cause prioritization, quantitative sanity checks, and practical phased actions."
+    },
+    "presentation_followup": {
+      "label": "Presentation Follow-Up",
+      "allow_fictional_scenarios": true,
+      "allow_illustrative_numbers_as_scenario": true,
+      "spoken_only_output": true,
+      "default_audience": "panel_member",
+      "description": "Deliver crisp 30-45 second answers tied directly to presentation artifacts, business objectives, and architectural decisions."
+    },
+    "coaching_evaluation": {
+      "label": "Coaching and Evaluation",
+      "allow_fictional_scenarios": false,
+      "allow_illustrative_numbers_as_scenario": false,
+      "spoken_only_output": false,
+      "default_audience": "candidate_coaching",
+      "description": "Break character cleanly to critique candidate/draft answers, inspect evidence gaps, verify math, and recommend concrete improvements."
+    }
+  }
+}

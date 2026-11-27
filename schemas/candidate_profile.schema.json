@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "candidate_profile.schema.json",
+  "title": "CandidateProfile",
+  "type": "object",
+  "required": [
+    "candidate_id",
+    "full_name",
+    "resume_version",
+    "created_at",
+    "career_chronology",
+    "explicit_skills",
+    "documented_metrics"
+  ],
+  "properties": {
+    "candidate_id": {"type": "string", "minLength": 1},
+    "full_name": {"type": "string", "minLength": 1},
+    "headline": {"type": "string"},
+    "resume_version": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "minLength": 1},
+    "career_chronology": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["employer", "role_title", "start_date", "end_date", "highlights"],
+        "properties": {
+          "employer": {"type": "string", "minLength": 1},
+          "role_title": {"type": "string", "minLength": 1},
+          "start_date": {"type": "string"},
+          "end_date": {"type": "string"},
+          "start_year": {"type": ["integer", "null"]},
+          "end_year": {"type": ["integer", "null"]},
+          "is_current": {"type": "boolean"},
+          "duration_months": {"type": ["integer", "null"], "minimum": 0},
+          "industry": {"type": "string"},
+          "domain_tags": {"type": "array", "items": {"type": "string"}},
+          "highlights": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "education": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["institution", "degree", "evidence_status"],
+        "properties": {
+          "institution": {"type": "string"},
+          "degree": {"type": "string"},
+          "field": {"type": "string"},
+          "graduation_year": {"type": ["integer", "null"]},
+          "evidence_status": {"type": "string"}
+        }
+      }
+    },
+    "certifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "evidence_status"],
+        "properties": {
+          "name": {"type": "string"},
+          "issuer": {"type": "string"},
+          "year": {"type": ["integer", "null"]},
+          "evidence_status": {"type": "string"}
+        }
+      }
+    },
+    "explicit_skills": {"type": "array", "items": {"type": "string"}},
+    "documented_metrics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["metric_id", "raw_text", "value", "unit", "employer", "evidence_status"],
+        "properties": {
+          "metric_id": {"type": "string"},
+          "raw_text": {"type": "string"},
+          "value": {"type": "number"},
+          "unit": {"type": "string"},
+          "context": {"type": "string"},
+          "employer": {"type": "string"},
+          "period": {"type": "string"},
+          "evidence_status": {"type": "string"}
+        }
+      }
+    },
+    "candidate_notes": {"type": "array", "items": {"type": "string"}},
+    "is_sparse_resume": {"type": "boolean"}
+  }
+}

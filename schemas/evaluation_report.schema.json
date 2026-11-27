@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evaluation_report.schema.json",
+  "title": "EvaluationReport",
+  "type": "object",
+  "required": [
+    "report_id",
+    "session_id",
+    "evaluator_type",
+    "evaluator_id",
+    "rubric_version",
+    "scores",
+    "overall_score",
+    "hard_failures",
+    "findings",
+    "created_at"
+  ],
+  "properties": {
+    "report_id": {"type": "string", "minLength": 1},
+    "session_id": {"type": "string", "minLength": 1},
+    "evaluator_type": {"type": "string", "enum": ["deterministic", "independent_llm", "blind_human"]},
+    "evaluator_id": {"type": "string"},
+    "rubric_version": {"type": "string"},
+    "scores": {"type": "object"},
+    "overall_score": {"type": "number", "minimum": 1, "maximum": 5},
+    "hard_failures": {"type": "array", "items": {"type": "string"}},
+    "findings": {"type": "array", "items": {"type": "object"}},
+    "latency_stats": {"type": "object"},
+    "created_at": {"type": "string"}
+  }
+}

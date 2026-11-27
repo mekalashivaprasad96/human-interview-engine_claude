@@ -1,0 +1,28 @@
+{
+  "rubric_version": "4.0.0",
+  "scale": {"min": 1.0, "max": 5.0},
+  "disclaimer": "Evaluation measures conversational realism, technical consistency, and rubric compliance; it does not guarantee interview outcomes or superiority over human candidates.",
+  "dimensions": {
+    "human_naturalness": {"weight": 1.2, "description": "Sounds like natural spoken English with contractions and varied rhythm."},
+    "conversational_authenticity": {"weight": 1.2, "description": "Avoids AI clichés, STAR headings, and formulaic three-part wrappers."},
+    "question_relevance": {"weight": 1.3, "description": "Answers the exact question asked, including all parts of multi-part prompts."},
+    "information_density": {"weight": 1.0, "description": "High signal per spoken sentence without fluff or filler padding."},
+    "technical_accuracy": {"weight": 1.3, "description": "Technically sound protocols, concepts, and system behavior."},
+    "implementation_depth": {"weight": 1.1, "description": "Explains real implementation/config choices rather than textbook definitions."},
+    "numerical_accuracy": {"weight": 1.2, "description": "Directly states established or correctly computed quantities."},
+    "mathematical_consistency": {"weight": 1.4, "description": "Zero contradictions across nodes, GPUs, GPU-hours, latency deltas, and budgets."},
+    "professional_credibility": {"weight": 1.1, "description": "Realistic constraints, trade-offs, and failures rather than exaggerated wins."},
+    "employer_alignment": {"weight": 1.0, "description": "Reflects employer industry realities and valid technology chronology."},
+    "seniority_alignment": {"weight": 1.1, "description": "Ownership scope and tone match actual documented seniority."},
+    "individual_ownership": {"weight": 1.2, "description": "Clearly separates personal actions from broader team delivery."},
+    "business_judgment": {"weight": 1.0, "description": "Links technical choices to cost, risk, SLOs, and customer impact."},
+    "leadership_maturity": {"weight": 1.0, "description": "Handles disagreements, compromises, and mentoring constructively."},
+    "context_awareness": {"weight": 1.1, "description": "Preserves established facts and references prior turns cleanly."},
+    "interviewer_adaptation": {"weight": 1.1, "description": "Adjusts depth for recruiter vs specialist vs executive."},
+    "follow_up_consistency": {"weight": 1.3, "description": "Sustains coherent architecture and facts over 20+ follow-ups."},
+    "appropriate_answer_length": {"weight": 1.0, "description": "Respects dynamic spoken duration budgets for question complexity."},
+    "evidence_integrity": {"weight": 1.4, "description": "Never presents fictional simulation scenarios as verified facts in authentic prep mode."},
+    "technical_defensibility": {"weight": 1.2, "description": "Defends valid trade-offs calmly and challenges false interviewer premises."},
+    "response_latency": {"weight": 0.8, "description": "Maintains conversational responsiveness (deterministic core < 100ms/turn)."}
+  }
+}

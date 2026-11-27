@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "professional_world_model.schema.json",
+  "title": "ProfessionalWorldModel",
+  "type": "object",
+  "required": [
+    "candidate_id",
+    "resume_version",
+    "generated_at",
+    "inferred_seniority",
+    "career_progression",
+    "employer_contexts",
+    "competency_graph",
+    "transferable_knowledge",
+    "potential_gaps",
+    "persona_profile"
+  ],
+  "properties": {
+    "candidate_id": {"type": "string", "minLength": 1},
+    "resume_version": {"type": "string", "minLength": 1},
+    "generated_at": {"type": "string", "minLength": 1},
+    "inferred_seniority": {
+      "type": "object",
+      "required": ["level", "total_years_experience", "rationale"],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["junior", "mid", "senior", "staff", "principal", "manager", "director", "executive"]
+        },
+        "total_years_experience": {"type": "number", "minimum": 0},
+        "rationale": {"type": "string"}
+      }
+    },
+    "career_progression": {
+      "type": "object",
+      "required": ["trajectory_summary", "ownership_evolution"],
+      "properties": {
+        "trajectory_summary": {"type": "string"},
+        "ownership_evolution": {"type": "string"},
+        "scope_growth": {"type": "string"}
+      }
+    },
+    "employer_contexts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["employer", "industry", "operational_priorities", "candidate_role_scope"],
+        "properties": {
+          "employer": {"type": "string"},
+          "industry": {"type": "string"},
+          "business_model": {"type": "string"},
+          "regulatory_environment": {"type": "array", "items": {"type": "string"}},
+          "operational_priorities": {"type": "array", "items": {"type": "string"}},
+          "security_posture": {"type": "string"},
+          "change_management": {"type": "string"},
+          "candidate_role_scope": {"type": "string"},
+          "start_year": {"type": ["integer", "null"]},
+          "end_year": {"type": ["integer", "null"]}
+        }
+      }
+    },
+    "competency_graph": {
+      "type": "object",
+      "required": ["technical_competencies", "business_competencies", "leadership_capabilities", "operational_responsibilities"],
+      "properties": {
+        "technical_competencies": {"type": "array", "items": {"type": "object"}},
+        "business_competencies": {"type": "array", "items": {"type": "string"}},
+        "leadership_capabilities": {"type": "array", "items": {"type": "string"}},
+        "customer_facing_capabilities": {"type": "array", "items": {"type": "string"}},
+        "operational_responsibilities": {"type": "array", "items": {"type": "string"}},
+        "engineering_methodologies": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "transferable_knowledge": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from_domain", "to_target_area", "rationale", "evidence_status"],
+        "properties": {
+          "from_domain": {"type": "string"},
+          "to_target_area": {"type": "string"},
+          "rationale": {"type": "string"},
+          "evidence_status": {"type": "string"}
+        }
+      }
+    },
+    "potential_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["gap_area", "severity", "bridging_strategy"],
+        "properties": {
+          "gap_area": {"type": "string"},
+          "severity": {"type": "string", "enum": ["low", "medium", "high"]},
+          "bridging_strategy": {"type": "string"}
+        }
+      }
+    },
+    "evaluation_dimensions": {"type": "array", "items": {"type": "string"}},
+    "persona_profile": {
+      "type": "object",
+      "required": ["maturity_level", "voice_register", "ownership_framing", "humility_markers"],
+      "properties": {
+        "maturity_level": {"type": "string"},
+        "voice_register": {"type": "string"},
+        "ownership_framing": {"type": "string"},
+        "humility_markers": {"type": "array", "items": {"type": "string"}},
+        "protected_attributes_inferred": {"type": "boolean"}
+      }
+    }
+  }
+}

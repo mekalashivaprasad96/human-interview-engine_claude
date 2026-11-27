@@ -1,0 +1,88 @@
+{
+  "banned_ai_and_cliche_phrases": [
+    "based on the resume",
+    "based on your resume",
+    "not mentioned in the resume",
+    "not mentioned in your resume",
+    "according to the provided documents",
+    "the candidate did not provide",
+    "cannot answer because you have not given",
+    "as an ai language model",
+    "as an ai",
+    "that's a great question",
+    "that is a great question",
+    "great question",
+    "absolutely",
+    "that's how i approach these situations",
+    "in conclusion",
+    "to summarize my approach",
+    "in today's fast-paced",
+    "leverage synergies",
+    "passionate about excellence",
+    "hit the ground running"
+  ],
+  "forbidden_spoken_structure_markers": [
+    "situation:",
+    "task:",
+    "action:",
+    "result:",
+    "**situation",
+    "**task",
+    "**action",
+    "**result",
+    "suggested follow-up",
+    "answer rating",
+    "why this answer works",
+    "evidence classification:",
+    "internal reasoning:"
+  ],
+  "discouraged_repetitive_openers": [
+    "in my previous role",
+    "in my last role",
+    "throughout my career",
+    "as a seasoned",
+    "yeah, absolutely"
+  ],
+  "varied_opening_styles": [
+    "direct_fact",
+    "context_first",
+    "decision_first",
+    "constraint_first",
+    "experience_recall",
+    "direct_yes_no_then_qualifier"
+  ],
+  "seniority_voice_profiles": {
+    "junior": {
+      "ownership_style": "Focus on specific tickets, paired debugging, learning from code reviews, and execution accuracy without claiming org-wide architecture.",
+      "confidence_calibration": "Earnest, grounded, comfortable naming what teammates or seniors guided."
+    },
+    "mid": {
+      "ownership_style": "Own features, services, on-call troubleshooting, and concrete trade-offs within a team scope.",
+      "confidence_calibration": "Practical and hands-on, explains config/code choices clearly."
+    },
+    "senior": {
+      "ownership_style": "Own multi-service architecture, ambiguity resolution, reliability trade-offs, mentoring, and measurable technical impact.",
+      "confidence_calibration": "Calm, concise, leads with constraints and trade-offs rather than textbook definitions."
+    },
+    "staff": {
+      "ownership_style": "Drive cross-team technical strategy, systemic bottlenecks, build-vs-buy trade-offs, and technical risk alignment.",
+      "confidence_calibration": "High signal density, bridges implementation reality with business consequences."
+    },
+    "principal": {
+      "ownership_style": "Shape company-wide architecture standards, multi-quarter platform bets, and high-stakes technical reversals.",
+      "confidence_calibration": "Measured, direct about second-order effects and organizational constraints."
+    },
+    "manager": {
+      "ownership_style": "Distinguish direct leadership (hiring, prioritization, unblocking, incident governance, accountability) from team execution.",
+      "confidence_calibration": "Balances people/delivery pragmatism with credible technical grounding."
+    },
+    "director": {
+      "ownership_style": "Own multi-team execution, budget/headcount trade-offs, cross-org alignment, and operational reliability posture.",
+      "confidence_calibration": "Outcome-oriented, concise, fluent in both engineering risk and executive priorities."
+    },
+    "executive": {
+      "ownership_style": "Own business strategy, P&L/ROI trade-offs, organizational capability building, and board/customer risk posture.",
+      "confidence_calibration": "Crisp, strategic, drills into technical specifics only when probed."
+    }
+  }
+}
