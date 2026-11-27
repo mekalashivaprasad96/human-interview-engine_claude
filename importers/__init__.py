@@ -1,15 +1,14 @@
-"""
-Historical Interview Importer - Imports and analyzes previous interviews for learning.
-"""
+"""Convenience bridge re-exporting HistoricalInterviewImporter from core package."""
 
-from .transcript_importer import TranscriptImporter
-from .chatgpt_importer import ChatGPTImporter
-from .claude_importer import ClaudeImporter
-from .weakness_analyzer import WeaknessAnalyzer
+from __future__ import annotations
 
-__all__ = [
-    "TranscriptImporter",
-    "ChatGPTImporter",
-    "ClaudeImporter",
-    "WeaknessAnalyzer",
-]
+import sys
+from pathlib import Path
+
+SRC_DIR = Path(__file__).resolve().parents[1] / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+from human_interview_engine.importers import HistoricalInterviewImporter
+
+__all__ = ["HistoricalInterviewImporter"]

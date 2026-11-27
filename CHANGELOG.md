@@ -1,94 +1,21 @@
 # Changelog
 
-All notable changes to HumanInterview Engine will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+All notable changes to **HumanInterview Engine** are documented in this file.
 
 ## [4.0.0] - 2026-11-26
-
-### Added - Initial Release
-
-#### Core Intelligence Modules
-- **Candidate Intelligence**: Resume parsing, career chronology, competency mapping, persona building, seniority assessment
-- **Professional World Model**: Employer context, industry modeling, knowledge mapping, gap analysis
-- **Employer Intelligence**: Company profiles, technology timeline validation
-- **Job Description Analysis**: JD parsing, requirements extraction, evaluation dimensions
-- **Experience Enrichment**: Scenario generation, project modeling, implementation detailing
-- **Numerical Intelligence**: Ledger management, calculations, consistency validation, unit handling
-- **Human Communication**: Response generation, style adaptation, persona rendering
-- **Interviewer Intelligence**: Classifier, intent analyzer, behavior tracker
-- **Transcription Intelligence**: Transcript cleaning, technical term correction, question reconstruction
-- **Technical Reasoning**: Implementation engine, troubleshooting engine, system design engine
-- **Behavioral Reasoning**: Behavioral engine, leadership engine, story selector
-- **Business Intelligence**: Business engine, customer engine, strategy engine
-- **Follow-up Intelligence**: Follow-up handler, consistency maintainer
-- **Response Validation**: Quality validator, technical validator, consistency validator
-
-#### Data Schemas
-- Candidate Profile Schema
-- Professional World Model Schema
-- Experience Story Bank Schema
-- Simulated Project Schema
-- Numerical Ledger Schema
-- Interview Session Schema
-- Evidence Classification Schema
-- Communication Preferences Schema
-
-#### Platform Adapters
-- **Claude Code**: Skill manifest, entry point, session management
-- **Claude Web/Desktop**: Custom instructions for copy-paste
-- **ChatGPT/Custom GPTs**: Custom instructions, knowledge file references
-
-#### Historical Learning
-- Transcript importer (JSON, text)
-- ChatGPT importer (ZIP, JSON exports)
-- Claude importer (JSON exports)
-- Weakness analyzer (27 categories, regression test generation)
-
-#### Evaluation Framework
-- Regression test suite (50+ test cases across 8 categories)
-- Multi-dimensional evaluator (20 dimensions)
-- Benchmark runner (5 standard benchmarks)
-
-#### Example Data
-- **Resumes**: Senior SWE (Fintech), Staff Engineer (Cloud), Engineering Manager (Cloud), Solutions Architect (SaaS)
-- **Job Descriptions**: Senior SWE (Payments), Staff Engineer (ML), Engineering Manager (Cloud)
-
-#### Documentation
-- Comprehensive README with quick start guide
-- SKILL.md for Claude Code skill manifest
-- SYSTEM_PROMPT.md portable core instructions
-- Configuration system with settings.json
-
-### Architecture
-- Modular, maintainable design with central orchestration
-- Structured data schemas for consistency
-- Platform-specific adapters for deployment flexibility
-- Local-first privacy design
-- Comprehensive test coverage
-
----
-
-## Future Releases
-
-### [4.1.0] - Planned
-- Web UI for session management
-- Voice interface integration
-- Real-time interview simulation mode
-- Enhanced historical learning with ML-based pattern detection
-- More platform adapters (VS Code, JetBrains, Slack)
-
-### [4.2.0] - Planned
-- Team/organization features
-- Shared candidate profiles
-- Interview rubric customization
-- Integration with ATS systems
-- Advanced analytics dashboard
-
-### [5.0.0] - Future Vision
-- AI-powered interview simulation with realistic interviewer personas
-- Real-time coaching during live interviews
-- Automated resume/JD parsing from PDF/LinkedIn
-- Multi-language support
-- Enterprise SSO and compliance features
+### Added
+- **Modular Cognitive Architecture (`core/` + `src/human_interview_engine/`):**
+  - Candidate Intelligence Engine parsing plain-text, Markdown, and JSON resumes (including sparse resumes) without protected-attribute inference.
+  - Professional World Model Builder calibrating seniority (`junior` through `executive`), career progression, competency graphs, transferable skills, and gaps.
+  - Employer Intelligence Engine with 10 industry profiles and a curated `technology_timeline.json` chronology validator.
+  - Job Description Analyzer identifying core vs. preferred skills, business/leadership/customer expectations, strengths, transferable bridges, and gaps.
+  - Scenario Modeling & Experience Enrichment Engines generating chronologically valid multi-employer projects, failure/rollback stories, and stakeholder disagreement stories.
+  - Numerical Intelligence Engine & Persistent Numerical Consistency Ledger verifying `nodes * gpus_per_node == total_gpus`, `gpu_hours`, baseline-to-final deltas, RPS daily extrapolations, availability downtime, and cost savings.
+  - Speech & Transcription Intelligence repairing phonetic ASR errors, splitting multi-part questions, detecting non-question statements, and enforcing the one-question wait protocol.
+  - Interviewer Intelligence, Dynamic Length Controller, and Human Communication Engine ensuring spoken-only output, contraction cadence, varied openings, and zero clichés/STAR headings.
+  - Specialized Technical, Troubleshooting, System Design, Behavioral, GCA, Business/Executive, and Follow-Up/Pressure reasoning engines.
+  - Evidence Classification System separating 10 evidence categories with explicit candidate confirmation promotion and strict `authentic_preparation` guards.
+  - Internal Response Validator, Historical Interview Importer (ChatGPT, Claude, Text/Markdown, JSON), and Controlled Continuous Improvement Engine.
+  - 21-dimension Evaluation Framework with deterministic scoring, independent-judge protocol, and blind human evaluation worksheet.
+  - Platform adapters for Claude Code (`SKILL.md` / `agentskills.io`), Claude Projects/Skills, ChatGPT Custom GPTs (`<= 8,000` chars verified), ChatGPT Projects, ChatGPT Custom Instructions, and Universal Portable Prompt bundle.
+  - Comprehensive unittest regression suite covering 25-turn adversarial consistency, sparse resumes, transcription errors, false premises, story diversity, multi-candidate isolation, and continuous improvement loops.

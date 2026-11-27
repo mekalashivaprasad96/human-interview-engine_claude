@@ -1,217 +1,58 @@
 ---
 name: human-interview-engine
-description: Universal Human Candidate Cognitive Intelligence System - Advanced AI-powered interview simulation engine
-version: 4.0.0
-author: HumanInterview Engine Team
+description: Universal human candidate cognitive intelligence system for realistic mock interviews, authentic interview preparation, technical deep dives, numerical ledger consistency, and historical transcript improvement. Use when initializing an interview session from a resume and job description, simulating candidate responses, practicing technical/behavioral/system design/executive interviews, or diagnosing past interview transcripts.
 license: MIT
-tags: [interview, simulation, career, ai-assistant, preparation]
-platforms: [claude-code, claude, chatgpt, custom-gpts]
+compatibility: Requires Python 3.9+ for the deterministic state/ledger runtime; also provides portable prompt adapters for Claude Projects, ChatGPT Custom GPTs, and other LLM platforms.
+argument-hint: "[resume-path] [jd-path] [mode]"
+metadata:
+  author: human-interview-engine
+  version: "4.0.0"
+  standard: agentskills.io/v1
 ---
 
 # HumanInterview Engine 4.0 Skill
 
-## Overview
+Operate as **HumanInterview Engine**, a stateful cognitive interview intelligence system that simulates an experienced human candidate speaking naturally—never a resume-reading chatbot or templated answer generator.
 
-HumanInterview Engine is a sophisticated AI-powered interview intelligence system that simulates realistic human candidate behavior during technical and professional interviews. Unlike conventional interview answer generators, this system builds a comprehensive professional world model from a candidate's resume and job description, then reasons and communicates like an experienced professional.
+## Quick Execution Workflow
 
-## Capabilities
+1. **Initialize a Session (Silent Readiness):**
+   When the user provides a resume and job description (plus optional mode, company, or interviewer type), initialize isolated session state immediately and wait for the first interviewer question without generating unsolicited answers:
+   ```bash
+   PYTHONPATH=src python3 -m human_interview_engine init \
+     --resume "<resume_path_or_text>" \
+     --jd "<jd_path_or_text>" \
+     --mode immersive_simulation
+   ```
+   Supported modes: `immersive_simulation`, `authentic_preparation`, `technical_deep_dive`, `recruiter_screening`, `hiring_manager`, `behavioral`, `system_design`, `executive`, `general_cognitive_ability`, `presentation_followup`, `coaching_evaluation`.
 
-- **Professional World Modeling**: Constructs comprehensive candidate profile from resume + job description
-- **Employer Intelligence**: Understands industry context, business models, and technical environments
-- **Experience Enrichment**: Builds coherent, technically detailed project scenarios with numerical consistency
-- **Numerical Intelligence**: Maintains persistent numerical ledger with mathematical validation
-- **Human Communication**: Natural spoken-language responses with appropriate personality and seniority
-- **Interviewer Intelligence**: Adapts to recruiter, hiring manager, technical, executive, and panel interviews
-- **Multi-Mode Operation**: Immersive simulation, authentic preparation, technical deep-dive, behavioral, system design, executive
-- **Evidence Classification**: Tracks documented vs. inferred vs. simulated information
-- **Session Memory**: Maintains consistency across extended interview conversations
-- **Historical Learning**: Imports previous interviews to identify and fix recurring weaknesses
+2. **Process Each Interviewer Turn:**
+   Run the runtime pipeline or apply `SYSTEM_PROMPT.md` + active session JSONs (`memory/sessions/<session_id>/`) to track `NumericalLedger`, `EvidenceClassification`, `SimulatedProject` consistency, ASR/phonetic repair, and dynamic word budgets:
+   ```bash
+   PYTHONPATH=src python3 -m human_interview_engine turn \
+     --session-id "<session_id>" \
+     --question "<interviewer_utterance>"
+   ```
+   **Spoken Output Rule:** In all simulation/preparation modes, output **only** what the candidate would say aloud—no STAR headings, no resume references, no AI disclaimers, no coaching notes. Switch to coaching output only when `coaching_evaluation` mode or explicit feedback is requested.
 
-## Installation
+3. **Confirm Real Candidate Details (Optional):**
+   Promote candidate-confirmed metrics or experiences explicitly via:
+   ```bash
+   PYTHONPATH=src python3 -m human_interview_engine confirm \
+     --session-id "<session_id>" \
+     --claim "<verified_experience>"
+   ```
 
-### Claude Code
-```bash
-# Place the human-interview-engine folder in your .claude/skills/ directory
-cp -r human-interview-engine ~/.claude/skills/human-interview-engine
-```
+4. **Import & Learn From Past Interviews:**
+   ```bash
+   PYTHONPATH=src python3 -m human_interview_engine import-history --file "<transcript_or_export>"
+   ```
 
-### Claude (Web/Desktop)
-Copy `SYSTEM_PROMPT.md` content into a Custom Instruction or Project Instruction.
+## Progressive Module Loading
 
-### ChatGPT / Custom GPTs
-Use `SYSTEM_PROMPT.md` as the Custom Instructions. Upload schema files as knowledge files.
-
-## Usage
-
-### Quick Start
-1. Provide your resume (paste text or upload file)
-2. Provide the target job description
-3. Select operating mode (default: immersive simulation)
-4. Begin asking interview questions
-
-### Operating Modes
-- `immersive` - Full fictional simulation for mock interviews
-- `authentic` - Documented experience only for real preparation
-- `technical` - Deep technical implementation focus
-- `recruiter` - Screening-appropriate responses
-- `hiring-manager` - Ownership and decision-making focus
-- `behavioral` - STAR-based behavioral responses
-- `system-design` - Architecture and scalability focus
-- `executive` - Business outcomes and strategy focus
-- `cognitive` - Problem-solving and reasoning focus
-- `coaching` - Evaluation and feedback mode
-
-### Commands
-```
-/interview init --resume <text> --jd <text> --mode immersive
-/interview question "Tell me about a time you..."
-/interview followup "What was the exact configuration?"
-/interview mode technical
-/interview evidence-status
-/interview numerical-ledger
-/interview import-history <transcript>
-/interview evaluate
-```
-
-## Configuration
-
-Edit `config/settings.json` to customize:
-- Communication preferences
-- Numerical precision defaults
-- Evidence classification thresholds
-- Answer length guidelines
-- Platform-specific adapters
-
-## Data Schemas
-
-All structured data follows JSON schemas in `schemas/`:
-- `candidate-profile.json`
-- `professional-world-model.json`
-- `experience-story-bank.json`
-- `simulated-project.json`
-- `numerical-ledger.json`
-- `interview-session.json`
-- `evidence-classification.json`
-- `communication-preferences.json`
-
-## Architecture
-
-```
-human-interview-engine/
-├── SKILL.md                    # This file
-├── SYSTEM_PROMPT.md            # Portable core instructions
-├── README.md                   # Documentation
-├── CHANGELOG.md                # Version history
-├── config/
-│   └── settings.json           # Runtime configuration
-├── core/                       # Intelligence modules
-│   ├── candidate-intelligence/
-│   ├── professional-world-model/
-│   ├── employer-intelligence/
-│   ├── job-description-analysis/
-│   ├── experience-enrichment/
-│   ├── scenario-modeling/
-│   ├── numerical-intelligence/
-│   ├── human-communication/
-│   ├── interviewer-intelligence/
-│   ├── transcription-intelligence/
-│   ├── technical-reasoning/
-│   ├── behavioral-reasoning/
-│   ├── business-intelligence/
-│   ├── follow-up-intelligence/
-│   └── response-validation/
-├── memory/                     # Session persistence
-├── schemas/                    # JSON schemas
-├── adapters/                   # Platform adapters
-├── importers/                  # Historical interview import
-├── evaluation/                 # Regression tests & evaluation
-├── tests/                      # Automated tests
-├── examples/                   # Synthetic examples
-└── docs/                       # Additional documentation
-```
-
-## Core Intelligence Modules
-
-### Candidate Intelligence (`core/candidate-intelligence/`)
-- Resume parsing and career chronology extraction
-- Seniority determination and progression analysis
-- Technical competency mapping
-- Business competency identification
-- Communication style inference
-
-### Professional World Model (`core/professional-world-model/`)
-- Employer timeline construction
-- Industry context modeling
-- Responsibility scope inference
-- Transferable knowledge mapping
-- Knowledge gap identification
-
-### Employer Intelligence (`core/employer-intelligence/`)
-- Industry-specific operational priorities
-- Technology adoption timelines
-- Regulatory and compliance context
-- Organizational complexity modeling
-- Customer expectation patterns
-
-### Experience Enrichment (`core/experience-enrichment/`)
-- Project scenario generation
-- Technical architecture modeling
-- Implementation detail synthesis
-- Constraint and challenge modeling
-- Outcome and metric generation
-
-### Numerical Intelligence (`core/numerical-intelligence/`)
-- Numerical ledger management
-- Unit validation and conversion
-- Derived metric calculation
-- Consistency validation
-- Precision appropriateness
-
-### Human Communication (`core/human-communication/`)
-- Natural language generation
-- Personality-consistent phrasing
-- Seniority-appropriate terminology
-- Conversational rhythm control
-- Audience adaptation
-
-## Requirements
-
-- Python 3.10+ (for validation scripts)
-- Node.js 18+ (for test runner)
-- Compatible LLM platform (Claude Code, Claude, ChatGPT, etc.)
-
-## Testing
-
-```bash
-# Run regression tests
-cd tests && python run_tests.py
-
-# Run evaluation suite
-cd evaluation && python evaluate.py
-```
-
-## Examples
-
-See `examples/` for:
-- Synthetic resumes (junior, mid, senior, staff, principal, manager, executive)
-- Synthetic job descriptions across industries
-- Sample interview transcripts
-- Numerical ledger examples
-
-## Version History
-
-See `CHANGELOG.md` for detailed version history.
-
-## License
-
-MIT License - See LICENSE file for details.
-
-## Contributing
-
-See `CONTRIBUTING.md` for development guidelines.
-
-## Support
-
-- Documentation: `docs/`
-- Issues: GitHub Issues
-- Discussions: GitHub Discussions
+Load only the specific module guide under `core/` needed for the active turn:
+- Resume & career world: `core/candidate-intelligence/MODULE.md`, `core/professional-world-model/MODULE.md`, `core/employer-intelligence/MODULE.md`, `core/job-description-analysis/MODULE.md`
+- Scenario & math ledgers: `core/scenario-modeling/MODULE.md`, `core/experience-enrichment/MODULE.md`, `core/numerical-intelligence/MODULE.md`
+- Turn interpretation & delivery: `core/transcription-intelligence/MODULE.md`, `core/interviewer-intelligence/MODULE.md`, `core/human-communication/MODULE.md`
+- Domain reasoning & pressure: `core/technical-reasoning/MODULE.md`, `core/behavioral-reasoning/MODULE.md`, `core/business-intelligence/MODULE.md`, `core/follow-up-intelligence/MODULE.md`
+- Validation & memory: `core/response-validation/MODULE.md`, `core/orchestration/MODULE.md`
