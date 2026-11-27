@@ -53,7 +53,7 @@ class InterviewerIntelligence:
             "executive": "executive",
             "hiring_manager": "hiring_manager",
         }
-        if any(k in low for k in ("salary", "compensation", "notice period", "relocate", "why are you looking", "walk me through your background", "tell me about yourself")):
+        if any(k in low for k in ("salary", "compensation", "notice period", "relocate", "why are you looking", "walk me through your background", "tell me about yourself", "introduce yourself")):
             return "recruiter"
         if any(k in low for k in ("design a ", "how would you architect", "scale to ", "system design")):
             return "system_design_interviewer"
@@ -74,7 +74,7 @@ class InterviewerIntelligence:
         prev_turns: list[dict[str, Any]],
     ) -> str:
         if meta.get("is_non_question"):
-            if any(k in low for k in ("wrap up", "end of our time", "that's all my questions", "thanks for joining")):
+            if any(k in low for k in ("wrap up", "end of our time", "that's all my questions", "thanks for joining", "that's all from me", "that's all i have", "that's it from me", "that is all from me")):
                 return "closing"
             return "information_only"
         if meta.get("is_incomplete"):

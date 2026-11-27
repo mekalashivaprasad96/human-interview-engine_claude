@@ -51,6 +51,32 @@ _NON_QUESTION_ACK_RE = re.compile(
 )
 
 
+_LEADING_MARKERS_RE = re.compile(
+    r"^(?:(?:so|and|okay|ok|alright|all right|right|now|then|well|next|great|cool|sure|thanks|please|"
+    r"got it|makes sense|perfect|moving on|let's say)[\s,.\-!]+)+",
+    re.IGNORECASE,
+)
+_QUESTION_OPENER_RE = re.compile(
+    r"^(?:how|what|why|when|which|where|who|whom|whose|can|could|would|will|should|shall|did|do|does|"
+    r"are|is|was|were|have|has|had|may|might)\b",
+    re.IGNORECASE,
+)
+_TASK_VERB_RE = re.compile(
+    r"^(?:tell|walk|explain|describe|design|build|give|compare|contrast|estimate|calculate|compute|derive|"
+    r"talk|share|introduce|summarize|summarise|list|sketch|draw|outline|define|implement|write|code|show|"
+    r"name|identify|discuss|elaborate|expand|clarify|evaluate|assess|propose|recommend|suggest|go over|"
+    r"go through|take me|help me|let's|lets|imagine|suppose|consider|pick|choose|rank|prioritize|prioritise|"
+    r"debug|troubleshoot|optimize|optimise|scale|architect|plan|model|diagram|review|justify|defend|"
+    r"break down|run me|give me|lay out|detail|quantify|size|reconcile)\b",
+    re.IGNORECASE,
+)
+_INTERROGATIVE_ANYWHERE_RE = re.compile(
+    r"\b(?:how many|how much|how long|how large|how big|how did|how would|how do|what was|what were|"
+    r"what is|what's|why did|why would|which one|walk me through|tell me)\b",
+    re.IGNORECASE,
+)
+
+
 class TranscriptionIntelligence:
     """Interprets raw text or noisy speech-to-text transcripts into clean conversational turns."""
 
@@ -104,7 +130,7 @@ class TranscriptionIntelligence:
             or (
                 "?" not in cleaned
                 and len(cleaned.split()) <= 10
-                and not re.match(r"^(?:tell|walk|explain|describe|how|what|why|when|which|where|who|can|could|would|did|do|are|is|was|were|have)\b", cleaned, re.IGNORECASE)
+                and not self._has_question_or_task_cue(cleaned)
             )
         )
 
@@ -124,6 +150,20 @@ class TranscriptionIntelligence:
             ),
             "sub_questions": sub_questions,
         }
+
+    @staticmethod
+    def _has_question_or_task_cue(cleaned: str) -> bool:
+        """Detect questions and instructions even without '?' (ASR output rarely has punctuation).
+
+        Leading discourse markers ("so", "and", "okay", "please", ...) are skipped, then the
+        utterance counts as a question/task if it opens with an interrogative, auxiliary or
+        imperative verb, or contains an interrogative phrase anywhere.
+        """
+        low = cleaned.lower().strip()
+        stripped = _LEADING_MARKERS_RE.sub("", low)
+        if _QUESTION_OPENER_RE.match(stripped) or _TASK_VERB_RE.match(stripped):
+            return True
+        return bool(_INTERROGATIVE_ANYWHERE_RE.search(low))
 
     @staticmethod
     def _detect_incomplete(cleaned: str) -> bool:
