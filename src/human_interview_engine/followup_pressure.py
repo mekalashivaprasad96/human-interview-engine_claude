@@ -35,6 +35,82 @@ class FollowUpAndPressureHandler:
     def __init__(self, numerical_engine: NumericalEngine) -> None:
         self.numerical_engine = numerical_engine
 
+    _SUPPORT_TITLE_RE = re.compile(
+        r"\b(?:support|tse|sysadmin|technical account manager|customer engineer|site operations)\b"
+    )
+    _SUPPORT_EVIDENCE_RE = re.compile(
+        r"\b(?:support tickets?|customer tickets?|ticket queues?|escalations?)\b"
+        r"|\b(?:g4dn|g5|p3|p4d|p5|inf1|inf2|trn1)\.[a-z0-9]+\b"
+    )
+    # Which documented-metric units/keywords can honestly answer a given ledger metric question.
+    _METRIC_MATCH_KEYWORDS: dict[str, tuple[str, ...]] = {
+        "nodes": ("node", "host", "server", "instance", "machine"),
+        "gpus_per_node": ("gpu",),
+        "total_gpus": ("gpu",),
+        "gpu_hours": ("gpu-hour", "gpu hour"),
+        "team_size": ("engineer", "people", "person", "developer", "report"),
+        "p99_latency_ms": ("latency", "p99", "ms"),
+        "throughput_rps": ("rps", "requests per second", "qps", "throughput"),
+        "daily_requests": ("requests", "transactions"),
+        "availability_pct": ("availability", "uptime"),
+        "monthly_downtime_minutes": ("downtime",),
+        "monthly_cost_savings_usd": ("usd", "cost", "spend", "saving"),
+        "annual_cost_savings_usd": ("usd", "cost", "spend", "saving"),
+        "project_duration_months": ("month", "week"),
+    }
+
+    @classmethod
+    def _is_support_scope(cls, profile: dict[str, Any], world_model: dict[str, Any] | None) -> bool:
+        """True only when the candidate's current role is support/TSE/TAM-style work.
+
+        Matches whole words in the latest role title (not 'supporting' or 'instance' anywhere in the
+        resume), the latest employer context's role scope, or explicit ticket/instance-type evidence
+        in the latest role's bullets.
+        """
+        chronology = profile.get("career_chronology", [])
+        if not chronology:
+            return False
+        latest = chronology[0]
+        if cls._SUPPORT_TITLE_RE.search((latest.get("role_title") or "").lower()):
+            return True
+        contexts = (world_model or {}).get("employer_contexts", [])
+        if contexts and contexts[0].get("candidate_role_scope") in (
+            "support_and_operations",
+            "customer_advisory_and_engineering",
+        ):
+            return True
+        return bool(cls._SUPPORT_EVIDENCE_RE.search(" ".join(latest.get("highlights", [])).lower()))
+
+    @classmethod
+    def _match_documented_metric(
+        cls, target_metric: str | None, metrics: list[dict[str, Any]]
+    ) -> dict[str, Any] | None:
+        """Return a documented resume metric that actually answers the asked metric, else None."""
+        keywords = cls._METRIC_MATCH_KEYWORDS.get(target_metric or "")
+        if not keywords:
+            return None
+        for m in metrics:
+            unit = str(m.get("unit") or "").lower()
+            raw = str(m.get("raw_text") or "").lower()
+            ctx = str(m.get("context") or "").lower()
+            if any(k in unit or k in raw for k in keywords):
+                return m
+            # Percentages and counts only qualify when their own bullet names the same quantity.
+            if target_metric in ("p99_latency_ms", "availability_pct") and any(k in ctx for k in keywords) and "%" in raw:
+                if target_metric == "availability_pct" or "latency" in ctx:
+                    return m
+        return None
+
+    @staticmethod
+    def _spoken_unit(unit: str, value: float) -> str:
+        """Pluralize/singularize simple count units so '1 nodes' and 'units' don't reach spoken output."""
+        u = (unit or "").strip()
+        if not u or u.lower() in ("units", "count"):
+            return "in total" if value != 1 else ""
+        if value == 1 and u.endswith("s") and not u.endswith("ss"):
+            return u[:-1]
+        return u
+
     def handle_numerical_probe(
         self,
         question: str,
@@ -79,13 +155,7 @@ class FollowUpAndPressureHandler:
                 f"{j.get('role_title', '')} {' '.join(j.get('highlights', []))}"
                 for j in profile.get("career_chronology", [])
             ).lower()
-            is_support_scope = any(
-                k in chron_text
-                for k in ("support", "ec2", "ticket", "troubleshooting", "instance", "g4dn", "p4d", "p3")
-            ) or any(
-                c.get("candidate_role_scope") in ("support_and_operations", "customer_advisory_and_engineering")
-                for c in (world_model or {}).get("employer_contexts", [])
-            )
+            is_support_scope = self._is_support_scope(profile, world_model)
 
             if is_support_scope and analysis["target_metric"] in ("gpus_per_node", "nodes", "total_gpus"):
                 # Extract concrete documented instance types from resume if present
@@ -105,11 +175,12 @@ class FollowUpAndPressureHandler:
                         "On the support side, my visibility was usually scoped to the customer's unhealthy instances or specific node group in a ticket—"
                         "typically one host up to a handful of affected nodes—rather than the customer's full cluster inventory."
                     )
-            elif verified:
-                vm = verified[0]
+            elif self._match_documented_metric(analysis["target_metric"], verified) is not None:
+                vm = self._match_documented_metric(analysis["target_metric"], verified)
+                where = f" at {vm['employer']}" if vm.get("employer") else ""
                 spoken = (
-                    f"From the metrics I directly tracked, I worked with {vm['raw_text']} at {vm['employer']} ({vm['context']}). "
-                    f"I don't have the exact breakdown for that figure offhand, though I can walk through how we measured and sized it."
+                    f"The number I can stand behind{where} is {vm['raw_text']}. "
+                    f"I don't have the exact breakdown for that figure offhand, though I can walk through how we measured it."
                 )
             else:
                 spoken = (
@@ -184,8 +255,9 @@ class FollowUpAndPressureHandler:
                 elif metric_name == "daily_requests":
                     spoken = f"At sustained peak, that works out to roughly {val:,.0f} {unit} ({entry['formula']})."
                 else:
-                    scope_s = entry["scope"][0].lower() + entry["scope"][1:] if entry.get("scope") else "that workload"
-                    spoken = f"That was {val:,.0f} {unit} across {scope_s}."
+                    spoken = f"That was {val:,.0f} {self._spoken_unit(unit, val)}".rstrip()
+                    formula = (entry.get("formula") or "").strip()
+                    spoken += f"—{formula}." if formula else "."
             return {
                 "spoken_draft": spoken,
                 "project_used": entry["project_id"],

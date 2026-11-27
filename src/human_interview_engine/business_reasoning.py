@@ -5,6 +5,11 @@ from __future__ import annotations
 from typing import Any
 
 
+def _article(word: str) -> str:
+    """Return 'an' before a vowel sound, otherwise 'a'."""
+    return "an" if (word or "x")[0].lower() in "aeiou" else "a"
+
+
 class BusinessIntelligenceEngine:
     """Frames answers for recruiters, executives, customer stakeholders, and business outcomes."""
 
@@ -18,7 +23,10 @@ class BusinessIntelligenceEngine:
         """Deliver crisp, natural career narrative and role motivation."""
         low = question.lower()
         chronology = profile.get("career_chronology", [])
-        latest = chronology[0] if chronology else {"role_title": "Engineer", "employer": "my current team"}
+        latest = chronology[0] if chronology else {}
+        role_title = latest.get("role_title") or "engineer"
+        employer = latest.get("employer")
+        role_phrase = f"{_article(role_title)} {role_title}" + (f" at {employer}" if employer else "")
         seniority = world_model.get("inferred_seniority", {})
         strengths = jd_analysis.get("candidate_strengths", [])[:3]
         strength_str = ", ".join(strengths) if strengths else "building reliable production systems"
@@ -27,15 +35,17 @@ class BusinessIntelligenceEngine:
 
         if any(k in low for k in ("why are you", "why this role", "why our company", "looking to leave", "motivated")):
             spoken = (
-                f"I've enjoyed the ownership I've had as a {latest.get('role_title')} at {latest.get('employer')}, especially around {strength_str}. "
+                f"I've enjoyed the ownership I've had as {role_phrase}, especially around {strength_str}. "
                 f"What stood out about {target_role} at {target_company} is the chance to apply that directly to {jd_analysis.get('target_industry', 'production scale')} "
                 f"challenges where reliability and practical execution really move the needle."
             )
         else:
             years = seniority.get("total_years_experience", 4)
-            industries = ", ".join(dict.fromkeys(c["industry"] for c in world_model.get("employer_contexts", []))) or "software engineering"
+            industry_list = list(dict.fromkeys(c["industry"] for c in world_model.get("employer_contexts", [])))
+            industries = " and ".join(industry_list[:2]) or "software engineering"
+            year_word = "year" if years == 1 else "years"
             spoken = (
-                f"I've spent about {years:g} years working across {industries}, most recently as a {latest.get('role_title')} at {latest.get('employer')}. "
+                f"I've spent about {years:g} {year_word} working across {industries}, most recently as {role_phrase}. "
                 f"Most of my hands-on focus has been around {strength_str}—taking ambiguous reliability or delivery problems from root cause to stable production. "
                 f"At this stage, I'm looking for a {target_role} scope where I can combine deep technical ownership with strong cross-team impact."
             )
